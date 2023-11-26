@@ -9,12 +9,12 @@ A collaborative effort by ALX Software Engineering students to develop a School 
 - **Grade Tracking:** Record and manage student academic performance.
 - **Class Scheduling:** Create and manage class schedules efficiently.
 
-🌐## Tech Stack
+## 🌐 Tech Stack
 
 - Backend: Django
 - Frontend: React
 
-👥## Team Members
+## 👥 Team Members
 
 - **Project Lead:** Peter Evance (peterevance1@gmail.com)
 - **Team Members:**

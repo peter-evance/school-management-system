@@ -1,8 +1,7 @@
 # School Management System
 
 ## Overview
-
-The School Management System is a comprehensive web application designed to streamline various administrative tasks within educational institutions. It provides features for student and teacher enrollment, grade tracking, and class scheduling.
+A collaborative effort by ALX Software Engineering students to develop a School Management System. This web application, built with Django and React, aims to streamline administrative tasks within educational institutions. Features include student enrollment, grade tracking, and efficient class scheduling.
 
 ## Features
 
@@ -10,12 +9,12 @@ The School Management System is a comprehensive web application designed to stre
 - **Grade Tracking:** Record and manage student academic performance.
 - **Class Scheduling:** Create and manage class schedules efficiently.
 
-## Tech Stack
+🌐## Tech Stack
 
 - Backend: Django
 - Frontend: React
 
-## Team Members
+👥## Team Members
 
 - **Project Lead:** Peter Evance (peterevance1@gmail.com)
 - **Team Members:**
@@ -47,3 +46,10 @@ The School Management System is a comprehensive web application designed to stre
     
     cd school-management-system/frontend
     npm start
+
+
+🚧 **Work in Progress**
+We welcome contributions and feedback as we continue to enhance the School Management System. Join us on our journey to create a user-friendly and efficient solution for educational institutions.
+
+📝 **ALX Software Engineering**
+This project is part of the ALX Software Engineering program, where learners collaborate on real-world projects to enhance their skills and knowledge.

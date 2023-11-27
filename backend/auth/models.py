@@ -1,6 +1,7 @@
-# CustomUser Model Definition
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+
+
 
 class CustomUser(AbstractUser):
     """
@@ -88,3 +89,28 @@ class CustomUser(AbstractUser):
         """
         self.is_admin = True
         self.save()
+        
+    def get_full_name(self):
+        """Return the full name"""
+        return f"{self.full_name} {self.last_name}"
+    
+    def get_role(self):
+        """Returns the role"""
+        if self.is_admin:
+            return "Admin"
+        if self.is_a_teacher:
+            return "Teacher"
+        if self.is_a_student:
+            return "Student"
+        
+    def get_students(self):
+        return CustomUser.objects.filter(is_a_student=True)
+    
+    def get_teachers(self):
+        return CustomUser.objects.filter(is_a_teacher=True)
+    
+    def get_admin(self):
+        return CustomUser.objects.filter(is_admin=True)
+    
+    def __str__(self):
+        return self.get_full_name()

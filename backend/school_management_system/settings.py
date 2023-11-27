@@ -55,6 +55,22 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "school_management_system.urls"
 
+AUTH_USER_MODEL = "auth.CustomUser"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}
+
+DJOSER = {
+    'SERIALIZERS': {
+        'user_create': 'auth.serializers.UserCreateSerializer',
+        'user': 'auth.serializers.UserSerializer',
+    }
+}
+
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",

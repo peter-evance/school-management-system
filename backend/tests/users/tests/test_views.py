@@ -20,5 +20,5 @@ def test_user_flow(client):
     
     response = client.post("/auth/users/", register_data)
     assert response.status_code == 201
-    assert response.data['username'] == 'michaelademicb'
+    assert response.data['username'] == 'michaelademic'
     print(response.data)

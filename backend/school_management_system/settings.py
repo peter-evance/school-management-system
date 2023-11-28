@@ -39,8 +39,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
+    "drf_yasg",
     "djoser",
-    "auth",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -55,7 +56,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "school_management_system.urls"
 
-AUTH_USER_MODEL = "auth.CustomUser"
+AUTH_USER_MODEL = "users.CustomUser"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -65,8 +66,8 @@ REST_FRAMEWORK = {
 
 DJOSER = {
     'SERIALIZERS': {
-        'user_create': 'auth.serializers.UserCreateSerializer',
-        'user': 'auth.serializers.UserSerializer',
+        'user_create': 'users.serializers.UserCreateSerializer',
+        'user': 'users.serializers.UserSerializer',
     }
 }
 

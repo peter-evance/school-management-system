@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
+from users.serializers import CustomUserCreateSerializer, CustomUserSerializer
 
-from auth.serializers import CustomUserCreateSerializer, CustomUserSerializer
+from users.models import CustomUser
 
 class CustomUserViewSet(ModelViewSet):
-    queryset = CustomUserSerializer.objects.all()
+    queryset = CustomUser.objects.all()
     
     def get_serializer_class(self):
         if self.action == 'create':

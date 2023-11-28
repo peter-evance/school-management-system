@@ -1,15 +1,15 @@
 from djoser.serializers import UserCreateSerializer, UserSerializer
 
-from auth.models import CustomUser
+from users.models import CustomUser
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
     class Meta:
         model = CustomUser
-        fields = '__all__'
+        fields = ('username','password','sex','first_name','last_name','role')
 
       
 class CustomUserSerializer(UserSerializer):
     class Meta:
         model = CustomUser
-        fields = '__all__'
+        fields = ('id','username','sex','first_name','last_name','role')

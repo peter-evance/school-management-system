@@ -19,8 +19,3 @@ class TestCreateUser:
         
         if serializer.is_valid():
             user = serializer.save()
-        
-        
-        
-        
-        

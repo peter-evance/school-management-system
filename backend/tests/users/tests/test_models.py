@@ -14,8 +14,8 @@ class TestCreateUser:
             'sex': 'Male',
             'role': 'Teacher',
             'password': '12345678QQ'
-            
-        })  
-        
+
+        })
+
         if serializer.is_valid():
             user = serializer.save()

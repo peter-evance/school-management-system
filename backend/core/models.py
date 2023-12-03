@@ -1,18 +1,20 @@
 from django.db import models
 from users.models import CustomUser
 from core.choices import *
-
+from datetime import datetime
 
 
 class Student(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     classroom = models.ForeignKey('ClassRoom', on_delete=models.SET_NULL, null=True)
+    date_of_birth = models.DateField(null=True)
+    address = models.TextField(null=True)
     created = models.DateTimeField(auto_now_add=True)
     
     @property
-    def get_reg_no(self):
-        creation_date = self.created.strftime('%Y')
-        return f"{self.id}-##{creation_date}"
+    def generate_registration_number(self):
+        registration_number = self.created.strftime("%m%d-%Y-%H%M%S") + str(self.id)
+        return registration_number[::-1]
 
 class Teacher(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)

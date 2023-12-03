@@ -2,7 +2,7 @@
 """
 core > models.py
 """
-def generate_registration_number(self):
+def registration_number(self):
     registration_number = self.created.strftime("%m%d-%Y-%H%M%S") + str(self.id)
     return registration_number[::-1]
 """
@@ -61,7 +61,7 @@ class Student(models.Model):
     enrolled_subjects = models.ManyToManyField(Subject, related_name='enrolled_students')
     
     @property
-    def generate_registration_number(self):
+    def registration_number(self):
         registration_number = self.created.strftime("%m%d-%Y-%H%M%S") + str(self.id)
         return registration_number[::-1]
 

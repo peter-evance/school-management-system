@@ -6,10 +6,10 @@ from users.models import CustomUser
 class CustomUserCreateSerializer(UserCreateSerializer):
     class Meta:
         model = CustomUser
-        fields = ('username','password','sex','first_name','last_name','role')
+        fields = ('username','password','sex','first_name','last_name','role', 'date_of_birth')
 
       
 class CustomUserSerializer(UserSerializer):
     class Meta:
         model = CustomUser
-        fields = ('id','username','sex','first_name','last_name','role')
+        fields = ('id','username','sex','first_name','last_name','role','date_of_birth')

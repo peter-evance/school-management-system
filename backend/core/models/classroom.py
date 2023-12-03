@@ -1,6 +1,5 @@
 from django.db import models
-from users.models import CustomUser
-from core.models.choices import *
+from core.choices import *
 
 class ClassRoom(models.Model):
     title = models.CharField(max_length=30, choices=ClassRoomTitleChoices.choices)

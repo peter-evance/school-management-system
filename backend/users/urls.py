@@ -10,7 +10,6 @@ app_name = 'users'
 router = routers.DefaultRouter()
 router.register(r'users', CustomUserViewSet, basename='users')
 
-
 urlpatterns = [
     path("login/", TokenCreateView.as_view(), name="login"),
     path("logout/", TokenDestroyView.as_view(), name="logout"),

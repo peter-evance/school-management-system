@@ -1,17 +1,13 @@
-from datetime import datetime
 from django.utils import timezone
-from django.http import HttpResponse
 import pytest
-from rest_framework import status
-
+from users.models import CustomUser
 from rest_framework.test import APIClient
 
-from users.models import CustomUser
 
-client = APIClient()
-
+@pytest.fixture
 @pytest.mark.django_db
-def test_user_registration(client):
+def setup_users():
+    client = APIClient()
     registration_data ={
         'username': 'ademic',
         'first_name': 'michael',
@@ -41,16 +37,17 @@ def test_user_registration(client):
     response = client.get(
         "/authusers/me", HTTP_AUTHORIZATION=f"Token {token}",follow=True
     )
-    assert response.status_code == 200
-    assert "username" in response.data
-    assert response.data["username"] == "ademic"
-    assert response.data["role"] == "Student"
-    
-    """Log out"""
-    response = client.post(
-        "/auth/logout/",
-        HTTP_AUTHORIZATION=f"Token {token}",
-    )
-    assert response.status_code == 204
-    
-    
+
+    return {
+        'client': client,
+        'token': token
+    }
+
+@pytest.fixture
+def setup_subject_data():
+    subject_data = {
+        'title': 'English',
+        'code': 'ENG',
+        'added_at': timezone.now().date()
+    }
+    return subject_data

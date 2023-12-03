@@ -1,9 +1,10 @@
+from django.utils import timezone
 import pytest
 from users.models import CustomUser
 from rest_framework.test import APIClient
 
 
-@pytest.fixture()
+@pytest.fixture
 @pytest.mark.django_db
 def setup_users():
     client = APIClient()
@@ -12,7 +13,7 @@ def setup_users():
         'first_name': 'michael',
         'last_name': 'ademic',
         'sex': CustomUser.SexChoices.MALE,
-        'role': CustomUser.RoleChoices.TEACHER,
+        'role': CustomUser.RoleChoices.STUDENT,
         'password': '12345678QQ',
         'date_of_birth': timezone.now().date()
     }
@@ -36,18 +37,17 @@ def setup_users():
     response = client.get(
         "/authusers/me", HTTP_AUTHORIZATION=f"Token {token}",follow=True
     )
-    assert response.status_code == 200
-    assert "username" in response.data
-    assert response.data["username"] == "ademic"
-    assert response.data["role"] == "Student"
-    
-    """Log out"""
-    response = client.post(
-        "/auth/logout/",
-        HTTP_AUTHORIZATION=f"Token {token}",
-    )
-    assert response.status_code == 204
 
     return {
-        'client':''
+        'client': client,
+        'token': token
     }
+
+@pytest.fixture
+def setup_subject_data():
+    subject_data = {
+        'title': 'English',
+        'code': 'ENG',
+        'added_at': timezone.now().date()
+    }
+    return subject_data

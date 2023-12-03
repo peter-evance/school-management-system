@@ -34,20 +34,20 @@ def test_user_registration(client):
     assert "auth_token" in response.data
     token = response.data["auth_token"]
 
-    # """Affirm user authorization"""
-    # response = client.get(
-    #     "/authusers/me", HTTP_AUTHORIZATION=f"Token {token}",follow=True
-    # )
-    # assert response.status_code == 200
-    # assert "username" in response.data
-    # assert response.data["username"] == "ademic"
-    # assert response.data["role"] == "Admin"
-    #
-    # """Log out"""
-    # response = client.post(
-    #     "/auth/logout/",
-    #     HTTP_AUTHORIZATION=f"Token {token}",
-    # )
-    # assert response.status_code == 204
-    #
+    """Affirm user authorization"""
+    response = client.get(
+        "/authusers/me", HTTP_AUTHORIZATION=f"Token {token}",follow=True
+    )
+    assert response.status_code == 200
+    assert "username" in response.data
+    assert response.data["username"] == "ademic"
+    assert response.data["role"] == "Student"
+    
+    """Log out"""
+    response = client.post(
+        "/auth/logout/",
+        HTTP_AUTHORIZATION=f"Token {token}",
+    )
+    assert response.status_code == 204
+    
     

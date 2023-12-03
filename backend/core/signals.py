@@ -1,6 +1,8 @@
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
-from core.models import *
+from core.models.student import Student
+from core.models.teacher import Teacher
+from core.models.admin import Admin
 
 from users.models import CustomUser
 

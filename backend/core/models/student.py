@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import CustomUser
 from core.models.choices import *
+from core.models.subject import Subject
 
 class Student(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)

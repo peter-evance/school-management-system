@@ -19,13 +19,6 @@ class CustomUser(AbstractUser):
     Additional Attributes:
         - REQUIRED_FIELDS (list): List of fields required for user creation.
 
-    Methods:
-        - assign_a_student(): Assigns the user as a student.
-        - assign_a_teacher(): Assigns the user as a teacher.
-        - assign_an_admin(): Assigns the user as an admin.
-        - dismiss_a_student(): Dismisses the user as a student.
-        - dismiss_a_teacher(): Dismisses the user as a teacher.
-        - dismiss_an_admin(): Dismisses the user as an admin.
     """
 
     class SexChoices(models.TextChoices):
@@ -58,6 +51,18 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.get_full_name()
+    
+    
+    # def save(self, *args, **kwargs):
+    #     from core.models import Student
+    #     print("HEY I AM TRIGGERED FROM THE SAVE METHOD")
+    #     if not self.pk and self.role == self.RoleChoices.STUDENT:
+    #         student: Student = Student.objects.create(user=self)
+            
+    #         print(student.get_reg_no)
+            
+    #     super().save(*args, **kwargs)
+        
 
     
     

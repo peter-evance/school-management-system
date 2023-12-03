@@ -1,7 +1,5 @@
 from django.db import models
-from users.models import CustomUser
-from core.choices import *
-from datetime import datetime
+from core.models.choices import *
 
 class Subject(models.Model):
     title = models.CharField(max_length=20)

@@ -1,7 +1,6 @@
 from django.db import models
 from users.models import CustomUser
-from core.choices import *
-from datetime import datetime
+from core.models.choices import *
 
 class Student(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)

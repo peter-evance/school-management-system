@@ -1,5 +1,7 @@
 from django.utils import timezone
 import pytest
+from core.models.classroom import ClassRoom
+from core.choices import *
 from users.models import CustomUser
 from rest_framework.test import APIClient
 
@@ -13,7 +15,7 @@ def setup_users():
         'first_name': 'michael',
         'last_name': 'ademic',
         'sex': CustomUser.SexChoices.MALE,
-        'role': CustomUser.RoleChoices.STUDENT,
+        'role': CustomUser.RoleChoices.TEACHER,
         'password': '12345678QQ',
         'date_of_birth': timezone.now().date()
     }
@@ -51,3 +53,14 @@ def setup_subject_data():
         'added_at': timezone.now().date()
     }
     return subject_data
+
+
+@pytest.fixture
+def setup_classroom_data():
+    classroom_data = {
+        'title': ClassRoomTitleChoices.SENIOR_SECONDARY_SCHOOL_2,
+        'code': '',
+        'capacity': 100,
+        'stream': ClassRoomStreamChoices.B
+    }
+    return classroom_data

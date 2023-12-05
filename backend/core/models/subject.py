@@ -2,8 +2,8 @@ from django.db import models
 from core.choices import *
 
 class Subject(models.Model):
-    title = models.CharField(max_length=20)
-    code = models.CharField(max_length=10)
+    title = models.CharField(max_length=20, unique=True)
+    code = models.CharField(max_length=10, unique=True)
     # max_marks = models.PositiveIntegerField(default=100)
     # min_mark = models.PositiveIntegerField(default=40)
     # mark_obtained = models.PositiveIntegerField(default=0, null=True)

@@ -1,3 +1,4 @@
+from core.models.subject import Subject
 import pytest
 from django.urls import reverse
 
@@ -14,20 +15,22 @@ class TestSubjectViewSet:
         response = self.client.post(reverse('core:subjects-list'), 
                                     self.subject_data, format='json',
                                     HTTP_AUTHORIZATION=f"Token {self.token}",)
+        assert response.status_code == 201
+        assert Subject.objects.all()
+
+    def test_get_subject_as_a_teacher_with_authorizarion(self):
+        Subject.objects.create(**self.subject_data)
+        response = self.client.get(reverse('core:subjects-list'), 
+                                   HTTP_AUTHORIZATION=f"Token {self.token}", 
+                                   follow=True)
+        assert response.status_code == 200
         print(response.data)
 
-    # def test_get_subject_as_a_teacher_with_authorizarion(self):
-    #     response = self.client.get(reverse('core:subjects-list'), 
-    #                                HTTP_AUTHORIZATION=f"Token {self.token}", 
-    #                                follow=True)
-    #     assert response.status_code == 200
-    #     assert 'code' in response.data 
-    #     print(response.data)
-
-    def test_add_subject_as_a_teacher_with_no_authorizarion(self):
+    def test_add_subject_with_no_authorizarion(self):
         response = self.client.post(reverse('core:subjects-list'), 
                                     self.subject_data, format='json')
         print(response.data)
+        assert response.status_code == 401
 
     def test_get_subject_as_a_teacher_with_no_authorizarion(self):
         response = self.client.get(reverse('core:subjects-list'))

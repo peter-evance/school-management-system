@@ -17,11 +17,13 @@ class ClassRoomSerializer(serializers.ModelSerializer):
 
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
+        depth = True
         model = Teacher
         fields = ['user', 'classroom', 'created_at', 'assigned_subjects']
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
+        depth = True
         model = Student
         fields = ['user', 'classroom', 'address', 'created_at','enrolled_subjects','registration_number']
 

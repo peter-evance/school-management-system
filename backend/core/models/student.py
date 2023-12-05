@@ -4,7 +4,7 @@ from core.choices import *
 from core.models.subject import Subject
 
 class Student(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE,limit_choices_to={'role': 'Student'})
     classroom = models.ForeignKey('ClassRoom', on_delete=models.SET_NULL, null=True)
     address = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)

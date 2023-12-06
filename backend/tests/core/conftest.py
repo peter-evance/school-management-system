@@ -6,30 +6,50 @@ from core.choices import *
 from users.models import CustomUser
 from rest_framework.test import APIClient
 
+def generate_user_data(role: str,username: str) -> (dict[str, any] | None):
+    role = role.lower()
+    user_roles = {
+        'teacher': CustomUser.RoleChoices.TEACHER,
+        'admin': CustomUser.RoleChoices.ADMIN,
+        'student': CustomUser.RoleChoices.STUDENT,
+    }
+    user_role = user_roles.get(role)
+    if user_role is None:
+        return None
+    
+    user_data = {
+        'username': username,
+        'first_name': 'michael',
+        'last_name': 'ademic',
+        'sex': CustomUser.SexChoices.MALE,
+        'role': user_role,
+        'password': '12345678QQ',
+        'date_of_birth': timezone.now().date()
+    }
+    return user_data
+
 
 @pytest.fixture
 @pytest.mark.django_db
 def setup_users():
     client = APIClient()
-    teachers_data ={
-        'username': 'ademic',
-        'first_name': 'michael',
-        'last_name': 'ademic',
-        'sex': CustomUser.SexChoices.MALE,
-        'role': CustomUser.RoleChoices.TEACHER,
-        'password': '12345678QQ',
-        'date_of_birth': timezone.now().date()
-    }
-    
-    response = client.post("/auth/users/", teachers_data)
+    role = 'teacher'
+    username = 'ademic'
+    teacher = generate_user_data(role, username)
+    if not teacher:
+        print(f'Invalid User role: {teacher.role}')
+        return
+
+    response = client.post("/auth/users/", teacher)
     assert response.status_code == status.HTTP_201_CREATED
-    assert response.data['username'] == 'ademic'
+    assert response.data['username'] == username
+    assert response.data['role'] == role.capitalize()
 
 
-    """user login test"""
+    """teacher login test"""
     user_login_data = {
-        "username": "ademic",
-        "password": "12345678QQ",
+        "username": username,
+        "password": teacher['password'],
     }
     response = client.post("/auth/login/", user_login_data)
     assert response.status_code == status.HTTP_200_OK
@@ -38,24 +58,21 @@ def setup_users():
 
 
     """ Student Login credentials """
-    student_data ={
-        'username': 'jenny',
-        'first_name': 'jenny',
-        'last_name': 'lane',
-        'sex': CustomUser.SexChoices.FEMALE,
-        'role': CustomUser.RoleChoices.STUDENT,
-        'password': '12345678QQ',
-        'date_of_birth': timezone.now().date()
-    }
+    role = 'student'
+    std_username = 'john'
+    student = generate_user_data(role, std_username)
+    if not student:
+        print(f'Invalid User role: {student.role}')
+        return
     """ Register Student """
-    response = client.post("/auth/users/", student_data)
+    response = client.post("/auth/users/", student)
     assert response.status_code == status.HTTP_201_CREATED
-    assert response.data['username'] == 'jenny'
+    assert response.data['username'] == std_username
 
     """ Login Student """
     student_login_data = {
-        "username": "jenny",
-        "password": "12345678QQ",
+        "username": std_username,
+        "password": student['password'],
     }
     response = client.post("/auth/login/", student_login_data)
     assert response.status_code == status.HTTP_200_OK
@@ -63,24 +80,21 @@ def setup_users():
     student_token = response.data["auth_token"]
 
     """ Admin Login credentials """
-    admin_data ={
-        'username': 'jeremy',
-        'first_name': 'jeremy',
-        'last_name': 'lane',
-        'sex': CustomUser.SexChoices.MALE,
-        'role': CustomUser.RoleChoices.ADMIN,
-        'password': '12345678QQ',
-        'date_of_birth': timezone.now().date()
-    }
+    role = 'admin'
+    adm_username = 'jeremiah'
+    admin = generate_user_data(role,adm_username)
+    if not admin:
+        print(f'Invalid User role: {admin.role}')
+        return
     """ Register admin """
-    response = client.post("/auth/users/", admin_data)
+    response = client.post("/auth/users/", admin)
     assert response.status_code == status.HTTP_201_CREATED
-    assert response.data['username'] == 'jeremy'
+    assert response.data['username'] == adm_username
 
     """ Login admin """
     admin_login_data = {
-        "username": "jeremy",
-        "password": "12345678QQ",
+       "username": adm_username,
+        "password": admin['password'],
     }
     response = client.post("/auth/login/", admin_login_data)
     assert response.status_code == status.HTTP_200_OK
@@ -97,7 +111,6 @@ def setup_users():
     }
 
 
-
 @pytest.fixture
 def setup_test_data():
     subject_data = {
@@ -111,26 +124,8 @@ def setup_test_data():
         'capacity': 100,
         'stream': ClassRoomStreamChoices.B
     }
-    custom_user_data ={
-        'username': 'lord',
-        'first_name': 'baker',
-        'last_name': 'lane',
-        'sex': CustomUser.SexChoices.FEMALE,
-        'role': CustomUser.RoleChoices.STUDENT,
-        'password': '12345678QQ',
-        'date_of_birth': timezone.now().date()
-    }
-    user = CustomUser.objects.create(**custom_user_data)
-
-    student_objects ={
-        'user': user,
-        'classroom': None,
-        'address': 'Lagos',
-        'created_at': timezone.now().date(),
-        'enrolled_subjects': []
-    }
+    
     return {
         'subject_data':subject_data,
         'classroom_data':classroom_data,
-        'student_objects':student_objects
     }

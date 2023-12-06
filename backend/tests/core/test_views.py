@@ -1,3 +1,5 @@
+from users.serializers import CustomUserSerializer
+from users.models import CustomUser
 import pytest
 from core.models.student import Student
 from core.serializers import StudentSerializer
@@ -16,7 +18,12 @@ class TestSubjectViewSet:
         self.admin_token = setup_users['admin_token']
         self.subject_data = setup_test_data['subject_data']
         self.classroom_data = setup_test_data['classroom_data']
-        self.set_student= setup_test_data['student_objects']
+
+    def create_users(self, role, username):
+        from tests.core.conftest import generate_user_data
+        
+        data = generate_user_data(role, username)
+        return CustomUser.objects.create(**data)
 
     """ ADD SUBJECTS (POST)"""
     def test_add_subject_with_no_authentication(self):
@@ -128,9 +135,18 @@ class TestSubjectViewSet:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     """ VIEW INDIVIDUAL STUDENT (GET)"""
-    def test_get_individual_student(self):
-        print('+=========================================================================+')
-        new_class = ClassRoom.objects.create(**self.classroom_data)
-        self.set_student['classroom'] = new_class
-        
-        print(self.set_student)
+    def test_update_student_profile(self):
+        role = 'student'
+        std_username = 'william'
+        student = self.create_users(role,std_username)
+        new_data = {'username': 'raphael'}
+
+        response = self.client.patch(
+            reverse('users:users-detail', kwargs={'pk': student.pk}),
+            data=new_data,
+            format='json',
+            HTTP_AUTHORIZATION=f'Token {self.student_token}'
+        )
+        assert response.status_code == status.HTTP_200_OK
+        updated_student = CustomUser.objects.get(pk=student.pk)
+        assert updated_student.username == 'raphael'

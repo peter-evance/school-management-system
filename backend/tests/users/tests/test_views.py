@@ -1,6 +1,8 @@
 from datetime import datetime
 from django.utils import timezone
 from django.http import HttpResponse
+from core.models.teacher import Teacher
+from core.models.student import Student
 import pytest
 from rest_framework import status
 
@@ -25,6 +27,7 @@ def test_user_registration(client):
     response = client.post("/auth/users/", registration_data)
     assert response.status_code == 201
     assert response.data['username'] == 'ademic'
+    assert Student.objects.all().exists()
 
 
     """user login test"""

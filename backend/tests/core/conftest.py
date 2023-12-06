@@ -1,3 +1,4 @@
+import random
 from django.utils import timezone
 import pytest
 from core.models.classroom import ClassRoom
@@ -98,21 +99,46 @@ def setup_users():
 
 
 @pytest.fixture
-def setup_subject_data():
+def setup_test_data():
     subject_data = {
         'title': 'English',
         'code': 'ENG',
         'added_at': timezone.now().date()
     }
-    return subject_data
-
-
-@pytest.fixture
-def setup_classroom_data():
     classroom_data = {
         'title': ClassRoomTitleChoices.SENIOR_SECONDARY_SCHOOL_2,
         'code': '',
         'capacity': 100,
         'stream': ClassRoomStreamChoices.B
     }
-    return classroom_data
+    student_data ={
+        'username': 'lord',
+        'first_name': 'baker',
+        'last_name': 'lane',
+        'sex': CustomUser.SexChoices.FEMALE,
+        'role': CustomUser.RoleChoices.STUDENT,
+        'password': '12345678QQ',
+        'date_of_birth': timezone.now().date()
+    }
+    user = CustomUser.objects.create(**student_data)
+
+    # student_objects ={
+    #     'user': user,
+    #     'classroom': classroom,
+    #     'address': 'Lagos',
+    #     'created_at': timezone.now().date(),
+    #     'enrolled_subjects': []
+    # }
+    """
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE,limit_choices_to={'role': 'Student'})
+    classroom = models.ForeignKey('ClassRoom', on_delete=models.SET_NULL, null=True)
+    address = models.TextField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    enrolled_subjects = models.ManyToManyField(Subject, related_name='enrolled_students')
+    """
+
+    return {
+        'subject_data':subject_data,
+        'classroom_data':classroom_data,
+        # 'student_objects':student_objects
+    }

@@ -111,7 +111,7 @@ def setup_test_data():
         'capacity': 100,
         'stream': ClassRoomStreamChoices.B
     }
-    student_data ={
+    custom_user_data ={
         'username': 'lord',
         'first_name': 'baker',
         'last_name': 'lane',
@@ -120,25 +120,17 @@ def setup_test_data():
         'password': '12345678QQ',
         'date_of_birth': timezone.now().date()
     }
-    user = CustomUser.objects.create(**student_data)
+    user = CustomUser.objects.create(**custom_user_data)
 
-    # student_objects ={
-    #     'user': user,
-    #     'classroom': classroom,
-    #     'address': 'Lagos',
-    #     'created_at': timezone.now().date(),
-    #     'enrolled_subjects': []
-    # }
-    """
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE,limit_choices_to={'role': 'Student'})
-    classroom = models.ForeignKey('ClassRoom', on_delete=models.SET_NULL, null=True)
-    address = models.TextField(null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    enrolled_subjects = models.ManyToManyField(Subject, related_name='enrolled_students')
-    """
-
+    student_objects ={
+        'user': user,
+        'classroom': None,
+        'address': 'Lagos',
+        'created_at': timezone.now().date(),
+        'enrolled_subjects': []
+    }
     return {
         'subject_data':subject_data,
         'classroom_data':classroom_data,
-        # 'student_objects':student_objects
+        'student_objects':student_objects
     }

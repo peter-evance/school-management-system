@@ -16,7 +16,7 @@ class TestSubjectViewSet:
         self.admin_token = setup_users['admin_token']
         self.subject_data = setup_test_data['subject_data']
         self.classroom_data = setup_test_data['classroom_data']
-        # self.student_objects= setup_test_data['student_objects']
+        self.set_student= setup_test_data['student_objects']
 
     """ ADD SUBJECTS (POST)"""
     def test_add_subject_with_no_authentication(self):
@@ -128,3 +128,9 @@ class TestSubjectViewSet:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     """ VIEW INDIVIDUAL STUDENT (GET)"""
+    def test_get_individual_student(self):
+        print('+=========================================================================+')
+        new_class = ClassRoom.objects.create(**self.classroom_data)
+        self.set_student['classroom'] = new_class
+        
+        print(self.set_student)

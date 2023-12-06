@@ -1,4 +1,4 @@
-import random
+from rest_framework import status
 from django.utils import timezone
 import pytest
 from core.models.classroom import ClassRoom
@@ -22,7 +22,7 @@ def setup_users():
     }
     
     response = client.post("/auth/users/", teachers_data)
-    assert response.status_code == 201
+    assert response.status_code == status.HTTP_201_CREATED
     assert response.data['username'] == 'ademic'
 
 
@@ -32,7 +32,7 @@ def setup_users():
         "password": "12345678QQ",
     }
     response = client.post("/auth/login/", user_login_data)
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     assert "auth_token" in response.data
     teachers_token = response.data["auth_token"]
 
@@ -49,7 +49,7 @@ def setup_users():
     }
     """ Register Student """
     response = client.post("/auth/users/", student_data)
-    assert response.status_code == 201
+    assert response.status_code == status.HTTP_201_CREATED
     assert response.data['username'] == 'jenny'
 
     """ Login Student """
@@ -58,7 +58,7 @@ def setup_users():
         "password": "12345678QQ",
     }
     response = client.post("/auth/login/", student_login_data)
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     assert "auth_token" in response.data
     student_token = response.data["auth_token"]
 
@@ -74,7 +74,7 @@ def setup_users():
     }
     """ Register admin """
     response = client.post("/auth/users/", admin_data)
-    assert response.status_code == 201
+    assert response.status_code == status.HTTP_201_CREATED
     assert response.data['username'] == 'jeremy'
 
     """ Login admin """
@@ -83,7 +83,7 @@ def setup_users():
         "password": "12345678QQ",
     }
     response = client.post("/auth/login/", admin_login_data)
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
     assert "auth_token" in response.data
     admin_token = response.data["auth_token"]
 

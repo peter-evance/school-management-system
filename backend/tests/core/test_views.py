@@ -1,8 +1,9 @@
+import pytest
 from core.models.student import Student
 from core.serializers import StudentSerializer
+from rest_framework import status
 from core.models.classroom import ClassRoom
 from core.models.subject import Subject
-import pytest
 from django.urls import reverse
 
 @pytest.mark.django_db
@@ -23,14 +24,14 @@ class TestSubjectViewSet:
         response = self.client.post(reverse('core:subjects-list'), 
                                     self.subject_data, format='json')
         print(response.data)
-        assert response.status_code == 401
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert not Subject.objects.filter(title = self.subject_data['title'])
 
     def test_add_subject_as_a_teacher(self):
         response = self.client.post(reverse('core:subjects-list'), 
                                     self.subject_data, format='json',
                                     HTTP_AUTHORIZATION=f"Token {self.teachers_token}",)
-        assert response.status_code == 201
+        assert response.status_code == status.HTTP_201_CREATED
         assert Subject.objects.all()
 
     def test_get_subject_with_authorizarion(self):
@@ -38,13 +39,13 @@ class TestSubjectViewSet:
         response = self.client.get(reverse('core:subjects-list'), 
                                    HTTP_AUTHORIZATION=f"Token {self.teachers_token}", 
                                    follow=True)
-        assert response.status_code == 200
+        assert response.status_code == status.HTTP_200_OK
     
     def test_add_subject_as_an_admin(self):
         response = self.client.post(reverse('core:subjects-list'), 
                                     self.subject_data, format='json',
                                     HTTP_AUTHORIZATION=f"Token {self.admin_token}",)
-        assert response.status_code == 201
+        assert response.status_code == status.HTTP_201_CREATED
         assert Subject.objects.all()
 
 
@@ -54,26 +55,26 @@ class TestSubjectViewSet:
         response = self.client.get(reverse('core:subjects-list'), 
                                     self.subject_data, format='json',
                                     )
-        assert response.status_code == 401
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_get_subject_as_a_teacher(self):
         Subject.objects.create(**self.subject_data)
         response = self.client.get(reverse('core:subjects-list'), 
                                    HTTP_AUTHORIZATION=f"Token {self.teachers_token}")
-        assert response.status_code == 200
+        assert response.status_code == status.HTTP_200_OK
 
     def test_get_subject_as_an_admin(self):
         Subject.objects.create(**self.subject_data)
         response = self.client.get(reverse('core:subjects-list'), 
                                    HTTP_AUTHORIZATION=f"Token {self.admin_token}", 
                                    follow=True)
-        assert response.status_code == 200
+        assert response.status_code == status.HTTP_200_OK
 
     def test_get_subject_as_a_student_permission_denied(self):
         Subject.objects.create(**self.subject_data)
         response = self.client.get(reverse('core:subjects-list'), 
                                    HTTP_AUTHORIZATION=f"Token {self.student_token}")
-        assert response.status_code == 403
+        assert response.status_code == status.HTTP_403_FORBIDDEN
 
     """ ADD CLASSROOM (POST)"""
     def test_add_classroom_as_a_teacher(self):
@@ -81,7 +82,7 @@ class TestSubjectViewSet:
         response = self.client.post(reverse('core:classrooms-list'), 
                                     self.classroom_data, format='json',
                                     HTTP_AUTHORIZATION=f"Token {self.teachers_token}",)
-        assert response.status_code == 201
+        assert response.status_code == status.HTTP_201_CREATED
         assert ClassRoom.objects.all()
 
     def test_add_classroom_as_a_admin(self):
@@ -89,7 +90,7 @@ class TestSubjectViewSet:
         response = self.client.post(reverse('core:classrooms-list'), 
                                     self.classroom_data, format='json',
                                     HTTP_AUTHORIZATION=f"Token {self.admin_token}",)
-        assert response.status_code == 201
+        assert response.status_code == status.HTTP_201_CREATED
         assert ClassRoom.objects.all()
         
     def test_add_classroom_as_a_student_permission_denied(self):
@@ -97,7 +98,7 @@ class TestSubjectViewSet:
         response = self.client.post(reverse('core:classrooms-list'), 
                                     self.classroom_data, format='json',
                                     HTTP_AUTHORIZATION=f"Token {self.student_token}",)
-        assert response.status_code == 403
+        assert response.status_code == status.HTTP_403_FORBIDDEN
         assert not ClassRoom.objects.all()
 
 
@@ -105,25 +106,25 @@ class TestSubjectViewSet:
     def test_get_classroom_with_no_authentication_unauthorized(self):
         ''' This returns unauthorised user 401 '''
         response = self.client.get(reverse('core:classrooms-list'),format='json')
-        assert response.status_code == 401
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_get_classrooms_as_a_teacher(self):
         ClassRoom.objects.create(**self.classroom_data)
         response = self.client.get(reverse('core:classrooms-list'), 
                                    HTTP_AUTHORIZATION=f"Token {self.teachers_token}")
-        assert response.status_code == 200
+        assert response.status_code == status.HTTP_200_OK
 
     def test_get_subject_as_an_admin(self):
         ClassRoom.objects.create(**self.classroom_data)
         response = self.client.get(reverse('core:classrooms-list'), 
                                    HTTP_AUTHORIZATION=f"Token {self.admin_token}", 
                                    follow=True)
-        assert response.status_code == 200
+        assert response.status_code == status.HTTP_200_OK
 
     def test_get_classroom_as_a_student_permission_denied(self):
         ClassRoom.objects.create(**self.classroom_data)
         response = self.client.get(reverse('core:classrooms-list'), 
                                    HTTP_AUTHORIZATION=f"Token {self.student_token}")
-        assert response.status_code == 403
+        assert response.status_code == status.HTTP_403_FORBIDDEN
 
     """ VIEW INDIVIDUAL STUDENT (GET)"""

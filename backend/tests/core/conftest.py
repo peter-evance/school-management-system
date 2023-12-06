@@ -10,7 +10,7 @@ from rest_framework.test import APIClient
 @pytest.mark.django_db
 def setup_users():
     client = APIClient()
-    registration_data ={
+    teachers_data ={
         'username': 'ademic',
         'first_name': 'michael',
         'last_name': 'ademic',
@@ -20,7 +20,7 @@ def setup_users():
         'date_of_birth': timezone.now().date()
     }
     
-    response = client.post("/auth/users/", registration_data)
+    response = client.post("/auth/users/", teachers_data)
     assert response.status_code == 201
     assert response.data['username'] == 'ademic'
 
@@ -33,17 +33,69 @@ def setup_users():
     response = client.post("/auth/login/", user_login_data)
     assert response.status_code == 200
     assert "auth_token" in response.data
-    token = response.data["auth_token"]
+    teachers_token = response.data["auth_token"]
 
-    """Affirm user authorization"""
-    response = client.get(
-        "/authusers/me", HTTP_AUTHORIZATION=f"Token {token}",follow=True
-    )
+
+    """ Student Login credentials """
+    student_data ={
+        'username': 'jenny',
+        'first_name': 'jenny',
+        'last_name': 'lane',
+        'sex': CustomUser.SexChoices.FEMALE,
+        'role': CustomUser.RoleChoices.STUDENT,
+        'password': '12345678QQ',
+        'date_of_birth': timezone.now().date()
+    }
+    """ Register Student """
+    response = client.post("/auth/users/", student_data)
+    assert response.status_code == 201
+    assert response.data['username'] == 'jenny'
+
+    """ Login Student """
+    student_login_data = {
+        "username": "jenny",
+        "password": "12345678QQ",
+    }
+    response = client.post("/auth/login/", student_login_data)
+    assert response.status_code == 200
+    assert "auth_token" in response.data
+    student_token = response.data["auth_token"]
+
+    """ Admin Login credentials """
+    admin_data ={
+        'username': 'jeremy',
+        'first_name': 'jeremy',
+        'last_name': 'lane',
+        'sex': CustomUser.SexChoices.MALE,
+        'role': CustomUser.RoleChoices.ADMIN,
+        'password': '12345678QQ',
+        'date_of_birth': timezone.now().date()
+    }
+    """ Register admin """
+    response = client.post("/auth/users/", admin_data)
+    assert response.status_code == 201
+    assert response.data['username'] == 'jeremy'
+
+    """ Login admin """
+    admin_login_data = {
+        "username": "jeremy",
+        "password": "12345678QQ",
+    }
+    response = client.post("/auth/login/", admin_login_data)
+    assert response.status_code == 200
+    assert "auth_token" in response.data
+    admin_token = response.data["auth_token"]
+
 
     return {
         'client': client,
-        'token': token
+        'teacher_token': teachers_token,
+        'student_token':student_token,
+        'admin_token':admin_token
+
     }
+
+
 
 @pytest.fixture
 def setup_subject_data():

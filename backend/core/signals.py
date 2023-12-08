@@ -6,12 +6,10 @@ from core.models.admin import Admin
 
 from users.models import CustomUser
 
-
 @receiver(post_save, sender=CustomUser)
 def create_a_profile(sender, instance, **kwargs):
     if instance.role == CustomUser.RoleChoices.STUDENT:
         student, _ = Student.objects.get_or_create(user=instance)
-        print(f"Reg Number: {student.registration_number}")
     elif instance.role == CustomUser.RoleChoices.TEACHER:
         teacher, _ = Teacher.objects.get_or_create(user=instance)
     else:

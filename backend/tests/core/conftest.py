@@ -107,25 +107,36 @@ def setup_users():
         'teacher_token': teachers_token,
         'student_token':student_token,
         'admin_token':admin_token
-
     }
 
 
 @pytest.fixture
-def setup_test_data():
+def setup_subject_data():
     subject_data = {
         'title': 'English',
         'code': 'ENG',
-        'added_at': timezone.now().date()
     }
-    classroom_data = {
-        'title': ClassRoomTitleChoices.SENIOR_SECONDARY_SCHOOL_2,
-        'code': '',
-        'capacity': 100,
-        'stream': ClassRoomStreamChoices.B
+    return subject_data
+
+@pytest.fixture()
+def setup_student_data():
+    student ={
+        'username': 'jane',
+        'first_name': 'lane',
+        'last_name': 'ademic',
+        'sex': CustomUser.SexChoices.MALE,
+        'role': CustomUser.RoleChoices.STUDENT,
+        'password': '12345678QQ',
+        'date_of_birth': timezone.now().date()
     }
-    
-    return {
-        'subject_data':subject_data,
-        'classroom_data':classroom_data,
+    return student
+
+@pytest.fixture()
+def setup_classroom_data():
+    classroom = {
+        'title': ClassRoomTitleChoices.JUNIOR_SECONDARY_SCHOOL_3,
+        'code': ClassRoomCodeChoices.JSS_3,
+        'capacity': 200,
+        'stream': 'A' 
     }
+    return classroom

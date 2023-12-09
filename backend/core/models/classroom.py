@@ -1,9 +1,18 @@
 from django.db import models
 from core.choices import *
 
+
 class ClassRoom(models.Model):
-    title = models.CharField(max_length=30, choices=ClassRoomTitleChoices.choices, unique=True)
-    code = models.CharField(max_length=10, choices=ClassRoomCodeChoices.choices, blank=True,null=True, unique=True)
+    title = models.CharField(
+        max_length=30, choices=ClassRoomTitleChoices.choices, unique=True
+    )
+    code = models.CharField(
+        max_length=10,
+        choices=ClassRoomCodeChoices.choices,
+        blank=True,
+        null=True,
+        unique=True,
+    )
     capacity = models.PositiveIntegerField(default=1)
     stream = models.CharField(max_length=1, choices=ClassRoomStreamChoices.choices)
 
@@ -19,12 +28,12 @@ class ClassRoom(models.Model):
 
         self.code = title_to_code_mapping.get(self.title, self.code)
         return self.code
+
     def save(self, *args, **kwargs):
         if self.id is None:
             self.id = self.pk
         self.code = self.update_class_code()
         super().save(*args, **kwargs)
 
-    
     def __str__(self):
         return self.title

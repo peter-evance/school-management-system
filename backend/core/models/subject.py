@@ -1,6 +1,7 @@
 from django.db import models
 from core.choices import *
 
+
 class Subject(models.Model):
     title = models.CharField(max_length=20, unique=True)
     code = models.CharField(max_length=10, unique=True)

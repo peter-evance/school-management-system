@@ -6,6 +6,7 @@ from core.models.admin import Admin
 
 from users.models import CustomUser
 
+
 @receiver(post_save, sender=CustomUser)
 def create_a_profile(sender, instance, **kwargs):
     if instance.role == CustomUser.RoleChoices.STUDENT:
@@ -14,4 +15,3 @@ def create_a_profile(sender, instance, **kwargs):
         teacher, _ = Teacher.objects.get_or_create(user=instance)
     else:
         admin, _ = Admin.objects.get_or_create(user=instance)
-        

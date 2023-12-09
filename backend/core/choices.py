@@ -7,6 +7,7 @@ class ClassRoomStreamChoices(models.TextChoices):
     C = "C"
     D = "D"
 
+
 class ClassRoomTitleChoices(models.TextChoices):
     JUNIOR_SECONDARY_SCHOOL_1 = "JUNIOR SECONDARY SCHOOL 1"
     JUNIOR_SECONDARY_SCHOOL_2 = "JUNIOR SECONDARY SCHOOL 2"
@@ -14,6 +15,7 @@ class ClassRoomTitleChoices(models.TextChoices):
     SENIOR_SECONDARY_SCHOOL_1 = "SENIOR SECONDARY SCHOOL 1"
     SENIOR_SECONDARY_SCHOOL_2 = "SENIOR SECONDARY SCHOOL 2"
     SENIOR_SECONDARY_SCHOOL_3 = "SENIOR SECONDARY SCHOOL 3"
+
 
 class ClassRoomCodeChoices(models.TextChoices):
     JSS_1 = "JSS 1"

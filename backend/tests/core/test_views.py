@@ -477,7 +477,10 @@ class TestClassRoomViewSet:
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert ClassRoom.objects.filter(pk=classroom.pk).exists()
 
+
 """ TEST StudentViewSet """
+
+
 @pytest.mark.django_db
 class TestStudentViewSet:
     """
@@ -741,67 +744,67 @@ class TestTeacherViewSet:
         self.classroom = setup_student_profile_data["classroom"]
         self.assigned_subjects = setup_student_profile_data["enrolled_subjects"]
 
-    """ UPDATE TEACHER (PATCH)"""
+        """ UPDATE TEACHER (PATCH)"""
 
-    def test_update_teacher_profile_as_an_admin(self):
-        teacher = Teacher.objects.get(id=1)
-        data = {
-            "classroom": self.classroom.pk,
-            "assigned_subjects": [subject.pk for subject in self.assigned_subjects],
-        }
-        response = self.client.patch(
-            reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
-            data=data,
-            format="json",
-            HTTP_AUTHORIZATION=f"Token {self.admin_token}",
-        )
+        def test_update_teacher_profile_as_an_admin(self):
+            teacher = Teacher.objects.get(id=1)
+            data = {
+                "classroom": self.classroom.pk,
+                "assigned_subjects": [subject.pk for subject in self.assigned_subjects],
+            }
+            response = self.client.patch(
+                reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
+                data=data,
+                format="json",
+                HTTP_AUTHORIZATION=f"Token {self.admin_token}",
+            )
 
-        assert response.status_code == status.HTTP_200_OK
-        updated_teacher = Teacher.objects.get(id=teacher.id)
-        assert updated_teacher.classroom == self.classroom
-        assert set(updated_teacher.assigned_subjects.all()) == set(
-            self.assigned_subjects
-        )
+            assert response.status_code == status.HTTP_200_OK
+            updated_teacher = Teacher.objects.get(id=teacher.id)
+            assert updated_teacher.classroom == self.classroom
+            assert set(updated_teacher.assigned_subjects.all()) == set(
+                self.assigned_subjects
+            )
 
-    def test_update_teacher_profile_as_a_teacher_permission_denied(self):
-        teacher = Teacher.objects.get(id=1)
-        data = {
-            "classroom": self.classroom.pk,
-            "assigned_subjects": [subject.pk for subject in self.assigned_subjects],
-        }
-        response = self.client.patch(
-            reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
-            data=data,
-            format="json",
-            HTTP_AUTHORIZATION=f"Token {self.teachers_token}",
-        )
+        def test_update_teacher_profile_as_a_teacher_permission_denied(self):
+            teacher = Teacher.objects.get(id=1)
+            data = {
+                "classroom": self.classroom.pk,
+                "assigned_subjects": [subject.pk for subject in self.assigned_subjects],
+            }
+            response = self.client.patch(
+                reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
+                data=data,
+                format="json",
+                HTTP_AUTHORIZATION=f"Token {self.teachers_token}",
+            )
 
-        assert response.status_code == status.HTTP_403_FORBIDDEN
-        updated_teacher = Teacher.objects.get(id=teacher.id)
-        assert updated_teacher.classroom != self.classroom
-        assert set(updated_teacher.assigned_subjects.all()) != set(
-            self.assigned_subjects
-        )
+            assert response.status_code == status.HTTP_403_FORBIDDEN
+            updated_teacher = Teacher.objects.get(id=teacher.id)
+            assert updated_teacher.classroom != self.classroom
+            assert set(updated_teacher.assigned_subjects.all()) != set(
+                self.assigned_subjects
+            )
 
-    def test_update_teacher_profile_as_a_student_permission_denied(self):
-        teacher = Teacher.objects.get(id=1)
-        data = {
-            "classroom": self.classroom.pk,
-            "assigned_subjects": [subject.pk for subject in self.assigned_subjects],
-        }
-        response = self.client.patch(
-            reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
-            data=data,
-            format="json",
-            HTTP_AUTHORIZATION=f"Token {self.student_token}",
-        )
+        def test_update_teacher_profile_as_a_student_permission_denied(self):
+            teacher = Teacher.objects.get(id=1)
+            data = {
+                "classroom": self.classroom.pk,
+                "assigned_subjects": [subject.pk for subject in self.assigned_subjects],
+            }
+            response = self.client.patch(
+                reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
+                data=data,
+                format="json",
+                HTTP_AUTHORIZATION=f"Token {self.student_token}",
+            )
 
-        assert response.status_code == status.HTTP_403_FORBIDDEN
-        updated_teacher = Teacher.objects.get(id=teacher.id)
-        assert updated_teacher.classroom != self.classroom
-        assert set(updated_teacher.assigned_subjects.all()) != set(
-            self.assigned_subjects
-        )
+            assert response.status_code == status.HTTP_403_FORBIDDEN
+            updated_teacher = Teacher.objects.get(id=teacher.id)
+            assert updated_teacher.classroom != self.classroom
+            assert set(updated_teacher.assigned_subjects.all()) != set(
+                self.assigned_subjects
+            )
 
     def test_update_teacher_profile_without_authorization(self):
         teacher = Teacher.objects.get(id=1)
@@ -812,7 +815,7 @@ class TestTeacherViewSet:
         response = self.client.patch(
             reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
             data=data,
-            format="json"
+            format="json",
         )
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         updated_teacher = Teacher.objects.get(id=teacher.id)
@@ -821,103 +824,48 @@ class TestTeacherViewSet:
             self.assigned_subjects
         )
 
-    # """ DELETE TEACHER_PROFILE (DELETE) """
+    """ DELETE TEACHER_PROFILE (DELETE) """
 
-    # def test_delete_student_profile_as_an_admin(self):
-    #     """
-    #     Test method to verify that an admin can successfully delete a student's profile.
+    def test_delete_teacher_profile_as_an_admin(self):
+        teacher = Teacher.objects.get(id=1)
+        print(teacher)
 
-    #     Steps:
-    #     1. Retrieve a student instance using the Student model.
-    #     2. Send a DELETE request to the students-detail endpoint with admin authentication.
-    #     3. Assert that the response status code is HTTP 204 NO CONTENT.
-    #     4. Verify that the student instance is no longer present in the database.
+        response = self.client.delete(
+            reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
+            format="json",
+            HTTP_AUTHORIZATION=f"Token {self.admin_token}",
+        )
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert not Teacher.objects.filter(id=teacher.pk).exists()
 
-    #     Notes:
-    #     - The test ensures that an admin has the authority to delete a student's profile.
-    #     - The admin's authentication token is used to authenticate the DELETE request.
+    def test_delete_teacher_profile_a_teacher_permission_denied(self):
+        teacher = Teacher.objects.get(id=1)
 
-    #     """
-    #     student = Student.objects.get(id=1)
+        response = self.client.delete(
+            reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
+            format="json",
+            HTTP_AUTHORIZATION=f"Token {self.teachers_token}",
+        )
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert Teacher.objects.filter(id=teacher.pk).exists()
 
-    #     response = self.client.delete(
-    #         reverse("core:students-detail", kwargs={"pk": student.pk}),
-    #         format="json",
-    #         HTTP_AUTHORIZATION=f"Token {self.admin_token}",
-    #     )
-    #     assert response.status_code == status.HTTP_204_NO_CONTENT
-    #     assert not Student.objects.filter(id=student.pk).exists()
+    def test_delete_teacher_profile_a_student_permission_denied(self):
+        teacher = Teacher.objects.get(id=1)
 
-    # def test_delete_student_profile_a_teacher(self):
-    #     """
-    #     Test method to verify that a teacher can successfully delete a student's profile.
+        response = self.client.delete(
+            reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
+            format="json",
+            HTTP_AUTHORIZATION=f"Token {self.student_token}",
+        )
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert Teacher.objects.filter(id=teacher.pk).exists()
 
-    #     Steps:
-    #     1. Retrieve a student instance using the Student model.
-    #     2. Send a DELETE request to the students-detail endpoint with admin authentication.
-    #     3. Assert that the response status code is HTTP 204 NO CONTENT.
-    #     4. Verify that the student instance is no longer present in the database.
+    def test_delete_teacher_profile_without_authorization(self):
+        teacher = Teacher.objects.get(id=1)
 
-    #     Notes:
-    #     - The test ensures that a teacher has the authority to delete a student's profile.
-    #     - The teacher's authentication token is used to authenticate the DELETE request.
-
-    #     """
-    #     student = Student.objects.get(id=1)
-
-    #     response = self.client.delete(
-    #         reverse("core:students-detail", kwargs={"pk": student.pk}),
-    #         format="json",
-    #         HTTP_AUTHORIZATION=f"Token {self.teachers_token}",
-    #     )
-    #     assert response.status_code == status.HTTP_204_NO_CONTENT
-    #     assert not Student.objects.filter(id=student.pk).exists()
-
-    # def test_delete_student_profile_a_student_permission_denied(self):
-    #     """
-    #     Test method to verify that a student cannot delete their own profile.
-
-    #     Steps:
-    #     1. Retrieve a student instance using the Student model.
-    #     2. Send a DELETE request to the students-detail endpoint with student authentication.
-    #     3. Assert that the response status code is HTTP 403 FORBIDDEN.
-    #     4. Assert that the student instance still exists in the database.
-
-    #     Notes:
-    #     - The test ensures that a student does not have permission to delete their own profile.
-    #     - The student's authentication token is used to authenticate the DELETE request.
-
-    #     """
-    #     student = Student.objects.get(id=1)
-
-    #     response = self.client.delete(
-    #         reverse("core:students-detail", kwargs={"pk": student.pk}),
-    #         format="json",
-    #         HTTP_AUTHORIZATION=f"Token {self.student_token}",
-    #     )
-    #     assert response.status_code == status.HTTP_403_FORBIDDEN
-    #     assert Student.objects.filter(id=student.pk).exists()
-
-    # def test_delete_student_profile_without_authorization(self):
-    #     """
-    #     Test method to verify that a delete request without proper authorization results in an unauthorized response.
-
-    #     Steps:
-    #     1. Retrieve a student instance using the Student model.
-    #     2. Send a DELETE request to the students-detail endpoint without proper authorization.
-    #     3. Assert that the response status code is HTTP 401 UNAUTHORIZED.
-    #     4. Assert that the student instance still exists in the database.
-
-    #     Notes:
-    #     - The test ensures that a delete request without proper authorization is rejected.
-    #     - The absence of authorization is simulated by not providing any authentication token.
-
-    #     """
-    #     student = Student.objects.get(id=1)
-
-    #     response = self.client.delete(
-    #         reverse("core:students-detail", kwargs={"pk": student.pk}),
-    #         format="json",
-    #     )
-    #     assert response.status_code == status.HTTP_401_UNAUTHORIZED
-    #     assert Student.objects.filter(id=student.pk).exists()
+        response = self.client.delete(
+            reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
+            format="json",
+        )
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        assert Teacher.objects.filter(id=teacher.pk).exists()

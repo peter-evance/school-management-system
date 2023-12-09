@@ -24,6 +24,7 @@ class ClassRoomSerializer(ModelSerializer):
 
 
 class TeacherSerializer(ModelSerializer):
+    user = PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     classroom = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
     assigned_subjects = PrimaryKeyRelatedField(
         queryset=Subject.objects.all(), many=True

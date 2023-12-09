@@ -1,13 +1,7 @@
-from users.serializers import CustomUserSerializer
-from users.serializers import CustomUserCreateSerializer
-from users.models import CustomUser
 import pytest
 from core.choices import *
 from core.models.student import Student
-from core.serializers import ClassRoomSerializer, StudentSerializer, SubjectSerializer
 from rest_framework import status
-from core.models.classroom import ClassRoom
-from core.models.subject import Subject
 from django.urls import reverse
 
 # @pytest.mark.django_db
@@ -364,36 +358,51 @@ from django.urls import reverse
 #         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 #         assert ClassRoom.objects.filter(pk=classroom.pk).exists()
 
-""" UPDATE STUDENT PROFILE (POST) """
 @pytest.mark.django_db
 class TestStudentViewSet:
+    """
+    Test suite class for the StudentViewSet API endpoints.
+
+    This class includes tests for updating student profiles as a teacher.
+
+    Attributes:
+        client (APIClient): An instance of the Django REST Framework APIClient for making API requests.
+        teachers_token (str): Authentication token for the teacher user.
+        student_token (str): Authentication token for the student user.
+        admin_token (str): Authentication token for the admin user.
+
+    Note:
+        This class assumes the existence of the Student model and appropriate API endpoints.
+        The `setup_users` fixture is used to set up authentication tokens, and a student user
+        (including the associated Student model) is created during the setup process.
+    """
+
     @pytest.fixture(autouse=True)
-    def setup(self, setup_users, setup_student_data,):
-        from rest_framework.test import APIClient
-        self.client =  APIClient()
+    def setup(self, setup_users):
+        self.client = setup_users["client"]
         self.teachers_token = setup_users['teacher_token']
         self.student_token = setup_users['student_token']
         self.admin_token = setup_users['admin_token']
-        # self.student_profile = setup_student_profile_data['student_profile_data']
-        # self.student_pk = setup_student_profile_data['user']
-        self.student_data = setup_student_data
-    
-    def create_and_save(self,serializer):
-        """ serializer method """
-        assert serializer.is_valid(), serializer.errors
-        return serializer.save(), serializer.errors
-    
-    def test_update_student_profile_as_a_teacher(self):  
-        student_profile = self.create_and_save(CustomUserCreateSerializer(data=self.student_data))
 
-        print(Student.objects.all())
-        # print(student_profile)
+    def test_update_student_profile_as_a_teacher(self):
+        """
+        Test method to check if a teacher can successfully update a student's profile.
+
+        Steps:
+        1. Retrieves a student instance using the Student model.
+        2. Prepares data for updating the student's profile (e.g., address).
+        3. Sends a PATCH request to the students-detail endpoint with teacher authentication.
+        4. Asserts that the response status code is HTTP 200 OK.
+
+        """
+        student = Student.objects.get(id=1)
         data = {
-            'address':'2nd Avenue, Lagos, Ikeja'
-        }     
-        response = self.client.patch(reverse('core:students-detail', kwargs={'pk': student_profile.pk}),
-                                    data=data,
-                                    format='json',
-                                    HTTP_AUTHORIZATION=f'Token {self.teachers_token}')
-        # assert response.status_code == status.HTTP_200_OK
-        print(response.data)
+            'address': '2nd Avenue, Lagos, Ikeja'
+        }
+        response = self.client.patch(
+            reverse('core:students-detail', kwargs={'pk': student.pk}),
+            data=data,
+            format='json',
+            HTTP_AUTHORIZATION=f'Token {self.teachers_token}'
+        )
+        assert response.status_code == status.HTTP_200_OK

@@ -12,9 +12,7 @@ class CustomUser(AbstractUser):
         - `first_name` (CharField): User's first name.
         - `last_name` (CharField): User's last name.
         - `sex` (CharField): User's gender with choices 'Male' or 'Female'.
-        - `is_a_teacher` (BooleanField): Indicates if the user is a teacher.
-        - `is_a_student` (BooleanField): Indicates if the user is a student.
-        - `is_admin` (BooleanField): Indicates if the user is an admin.
+
 
     Additional Attributes:
         - REQUIRED_FIELDS (list): List of fields required for user creation.
@@ -35,6 +33,8 @@ class CustomUser(AbstractUser):
     last_name = models.CharField(max_length=30)
     sex = models.CharField(max_length=6, choices=SexChoices.choices)
     date_of_birth = models.DateField()
+    address = models.TextField(null=True)
+    email = models.EmailField(max_length=40, null=True)
     role = models.CharField(max_length=10, choices=RoleChoices.choices)
 
 

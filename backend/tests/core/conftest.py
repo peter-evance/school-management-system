@@ -140,3 +140,54 @@ def setup_classroom_data():
         'stream': 'A' 
     }
     return classroom
+
+# @pytest.fixture
+# @pytest.mark.django_db
+# def setup_student_profile_data():
+#     from core.serializers import ClassRoomSerializer, SubjectSerializer
+#     from users.serializers import CustomUserCreateSerializer
+
+#     def create_and_save(serializer):
+#         assert serializer.is_valid()
+#         return serializer.save()
+    
+
+#     student_data = {
+#         'username': 'jane',
+#         'first_name': 'lane',
+#         'last_name': 'ademic',
+#         'sex': CustomUser.SexChoices.MALE,
+#         'role': CustomUser.RoleChoices.STUDENT,
+#         'password': '12345678QQ',
+#         'date_of_birth': timezone.now().date()
+#     }
+#     user = create_and_save(CustomUserCreateSerializer(data=student_data))
+
+#     classroom_data = {
+#         'title': ClassRoomTitleChoices.JUNIOR_SECONDARY_SCHOOL_3,
+#         'code': ClassRoomCodeChoices.JSS_3,
+#         'capacity': 200,
+#         'stream': 'A' 
+#     }
+#     classroom = create_and_save(ClassRoomSerializer(data=classroom_data))
+
+#     subjects_data = [
+#         {'title': 'English', 'code': 'ENG'},
+#         {'title': 'Mathematics', 'code': 'MTH'},
+#         {'title': 'Biology', 'code': 'BIO'}
+#     ]
+#     enrolled_subjects = [
+#         create_and_save(SubjectSerializer(data=sub_data))
+#         for sub_data in subjects_data
+#     ]
+    
+#     student_profile_data = {
+#         'user': user.pk,
+#         'classroom': classroom.pk,
+#         'address': 'a',
+#         'enrolled_subjects': [sub.pk for sub in enrolled_subjects]
+#     }
+#     return {
+#         'user': user.pk,
+#         'student_profile_data':student_profile_data
+#     }

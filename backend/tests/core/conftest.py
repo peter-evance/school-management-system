@@ -8,7 +8,6 @@ from users.models import CustomUser
 from rest_framework.test import APIClient
 
 
-
 @pytest.fixture
 @pytest.mark.django_db
 def setup_users():
@@ -33,19 +32,18 @@ def setup_users():
         "last_name": "Ademic",
         "sex": CustomUser.SexChoices.MALE,
         "date_of_birth": timezone.now().date() - timedelta(weeks=500),
-        "password": "12345678QQ"
+        "password": "12345678QQ",
     }
 
     # Create teacher user
     response = client.post("/auth/users/", teacher_data)
     assert response.status_code == status.HTTP_201_CREATED
-    print(response.data)
-    assert response.data['username'] == teacher_data['username']
+    assert response.data["username"] == teacher_data["username"]
 
     # Teacher login
     teacher_login_data = {
-        "username": teacher_data['username'],
-        "password": teacher_data['password'],
+        "username": teacher_data["username"],
+        "password": teacher_data["password"],
     }
     response = client.post("/auth/login/", teacher_login_data)
     assert response.status_code == status.HTTP_200_OK
@@ -60,18 +58,18 @@ def setup_users():
         "last_name": "Ademic",
         "sex": CustomUser.SexChoices.MALE,
         "date_of_birth": timezone.now().date() - timedelta(weeks=50),
-        "password": "12345678QQ"
+        "password": "12345678QQ",
     }
 
     # Create student user
     response = client.post("/auth/users/", student_data)
     assert response.status_code == status.HTTP_201_CREATED
-    assert response.data['username'] == student_data['username']
+    assert response.data["username"] == student_data["username"]
 
     # Student login
     student_login_data = {
-        "username": student_data['username'],
-        "password": student_data['password'],
+        "username": student_data["username"],
+        "password": student_data["password"],
     }
     response = client.post("/auth/login/", student_login_data)
     assert response.status_code == status.HTTP_200_OK
@@ -86,18 +84,18 @@ def setup_users():
         "last_name": "Ademic",
         "sex": CustomUser.SexChoices.MALE,
         "date_of_birth": timezone.now().date() - timedelta(weeks=1000),
-        "password": "12345678QQ"
+        "password": "12345678QQ",
     }
 
     # Create admin user
     response = client.post("/auth/users/", admin_data)
     assert response.status_code == status.HTTP_201_CREATED
-    assert response.data['username'] == admin_data['username']
+    assert response.data["username"] == admin_data["username"]
 
     # Admin login
     admin_login_data = {
-        "username": admin_data['username'],
-        "password": admin_data['password'],
+        "username": admin_data["username"],
+        "password": admin_data["password"],
     }
     response = client.post("/auth/login/", admin_login_data)
     assert response.status_code == status.HTTP_200_OK
@@ -105,91 +103,92 @@ def setup_users():
     admin_token = response.data["auth_token"]
 
     return {
-        'client': client,
-        'teacher_token': teachers_token,
-        'student_token': student_token,
-        'admin_token': admin_token
+        "client": client,
+        "teacher_token": teachers_token,
+        "student_token": student_token,
+        "admin_token": admin_token,
     }
 
 
 @pytest.fixture
 def setup_subject_data():
     subject_data = {
-        'title': 'English',
-        'code': 'ENG',
+        "title": "English",
+        "code": "ENG",
     }
     return subject_data
 
+
 @pytest.fixture()
 def setup_student_data():
-    student ={
-        'username': 'jane',
-        'first_name': 'lane',
-        'last_name': 'ademic',
-        'sex': CustomUser.SexChoices.MALE,
-        'role': CustomUser.RoleChoices.STUDENT,
-        'password': '12345678QQ',
-        'date_of_birth': timezone.now().date() - timedelta(weeks=500)
+    student = {
+        "username": "jane",
+        "first_name": "lane",
+        "last_name": "ademic",
+        "sex": CustomUser.SexChoices.MALE,
+        "role": CustomUser.RoleChoices.STUDENT,
+        "password": "12345678QQ",
+        "date_of_birth": timezone.now().date() - timedelta(weeks=500),
     }
     return student
+
 
 @pytest.fixture()
 def setup_classroom_data():
     classroom = {
-        'title': ClassRoomTitleChoices.JUNIOR_SECONDARY_SCHOOL_3,
-        'code': ClassRoomCodeChoices.JSS_3,
-        'capacity': 200,
-        'stream': 'A' 
+        "title": ClassRoomTitleChoices.JUNIOR_SECONDARY_SCHOOL_3,
+        "code": ClassRoomCodeChoices.JSS_3,
+        "capacity": 200,
+        "stream": "A",
     }
     return classroom
 
-# @pytest.fixture
-# @pytest.mark.django_db
-# def setup_student_profile_data():
-#     from core.serializers import ClassRoomSerializer, SubjectSerializer
-#     from users.serializers import CustomUserCreateSerializer
 
-#     def create_and_save(serializer):
-#         assert serializer.is_valid()
-#         return serializer.save()
-    
+@pytest.fixture
+@pytest.mark.django_db
+def setup_student_profile_data():
+    from core.serializers import ClassRoomSerializer, SubjectSerializer
+    from users.serializers import CustomUserCreateSerializer
 
-#     student_data = {
-#         'username': 'jane',
-#         'first_name': 'lane',
-#         'last_name': 'ademic',
-#         'sex': CustomUser.SexChoices.MALE,
-#         'role': CustomUser.RoleChoices.STUDENT,
-#         'password': '12345678QQ',
-#         'date_of_birth': timezone.now().date()
-#     }
-#     user = create_and_save(CustomUserCreateSerializer(data=student_data))
+    def create_and_save(serializer):
+        assert serializer.is_valid()
+        return serializer.save()
 
-#     classroom_data = {
-#         'title': ClassRoomTitleChoices.JUNIOR_SECONDARY_SCHOOL_3,
-#         'code': ClassRoomCodeChoices.JSS_3,
-#         'capacity': 200,
-#         'stream': 'A' 
-#     }
-#     classroom = create_and_save(ClassRoomSerializer(data=classroom_data))
+    student_data = {
+        "username": "jane",
+        "first_name": "lane",
+        "last_name": "ademic",
+        "sex": CustomUser.SexChoices.MALE,
+        "role": CustomUser.RoleChoices.STUDENT,
+        "password": "12345678QQ",
+        "date_of_birth": timezone.now().date(),
+    }
+    user = create_and_save(CustomUserCreateSerializer(data=student_data))
 
-#     subjects_data = [
-#         {'title': 'English', 'code': 'ENG'},
-#         {'title': 'Mathematics', 'code': 'MTH'},
-#         {'title': 'Biology', 'code': 'BIO'}
-#     ]
-#     enrolled_subjects = [
-#         create_and_save(SubjectSerializer(data=sub_data))
-#         for sub_data in subjects_data
-#     ]
-    
-#     student_profile_data = {
-#         'user': user.pk,
-#         'classroom': classroom.pk,
-#         'address': 'a',
-#         'enrolled_subjects': [sub.pk for sub in enrolled_subjects]
-#     }
-#     return {
-#         'user': user.pk,
-#         'student_profile_data':student_profile_data
-#     }
+    classroom_data = {
+        "title": ClassRoomTitleChoices.JUNIOR_SECONDARY_SCHOOL_3,
+        "code": ClassRoomCodeChoices.JSS_3,
+        "capacity": 200,
+        "stream": "A",
+    }
+    classroom = create_and_save(ClassRoomSerializer(data=classroom_data))
+
+    subjects_data = [
+        {"title": "English", "code": "ENG"},
+        {"title": "Mathematics", "code": "MTH"},
+        {"title": "Biology", "code": "BIO"},
+    ]
+    enrolled_subjects = [
+        create_and_save(SubjectSerializer(data=sub_data)) for sub_data in subjects_data
+    ]
+
+    student_profile_data = {
+        "user": user.pk,
+        "classroom": classroom.pk,
+        "enrolled_subjects": [sub.pk for sub in enrolled_subjects],
+    }
+    return {
+        "classroom": classroom,
+        "enrolled_subjects": enrolled_subjects,
+        "student_profile_data": student_profile_data,
+    }

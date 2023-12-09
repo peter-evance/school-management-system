@@ -13,7 +13,7 @@ class IsAdmin(BasePermission):
                 raise PermissionDenied('You are not allowed to perform this action')
             except Admin.DoesNotExist:
                 raise PermissionDenied('You are not allowed to perform this action')
-        raise PermissionDenied('Authentication required for this action')
+        raise AuthenticationFailed('Authentication required for this action')
     
 class IsTeacher(BasePermission):
     def has_permission(self, request, view):
@@ -25,7 +25,7 @@ class IsTeacher(BasePermission):
                 raise PermissionDenied('Only Teachers are allowed to perform this action')
             except Teacher.DoesNotExist:
                 raise PermissionDenied('You are not allowed to perform this action please')
-        raise PermissionDenied('Authentication required for this action')
+        raise AuthenticationFailed('Authentication required for this action')
     
 class IsTeacherOrAdmin(BasePermission):
     def has_permission(self, request, view):

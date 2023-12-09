@@ -744,67 +744,67 @@ class TestTeacherViewSet:
         self.classroom = setup_student_profile_data["classroom"]
         self.assigned_subjects = setup_student_profile_data["enrolled_subjects"]
 
-        """ UPDATE TEACHER (PATCH)"""
+    """ UPDATE TEACHER (PATCH)"""
 
-        def test_update_teacher_profile_as_an_admin(self):
-            teacher = Teacher.objects.get(id=1)
-            data = {
-                "classroom": self.classroom.pk,
-                "assigned_subjects": [subject.pk for subject in self.assigned_subjects],
-            }
-            response = self.client.patch(
-                reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
-                data=data,
-                format="json",
-                HTTP_AUTHORIZATION=f"Token {self.admin_token}",
-            )
+    def test_update_teacher_profile_as_an_admin(self):
+        teacher = Teacher.objects.get(id=1)
+        data = {
+            "classroom": self.classroom.pk,
+            "assigned_subjects": [subject.pk for subject in self.assigned_subjects],
+        }
+        response = self.client.patch(
+            reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
+            data=data,
+            format="json",
+            HTTP_AUTHORIZATION=f"Token {self.admin_token}",
+        )
 
-            assert response.status_code == status.HTTP_200_OK
-            updated_teacher = Teacher.objects.get(id=teacher.id)
-            assert updated_teacher.classroom == self.classroom
-            assert set(updated_teacher.assigned_subjects.all()) == set(
-                self.assigned_subjects
-            )
+        assert response.status_code == status.HTTP_200_OK
+        updated_teacher = Teacher.objects.get(id=teacher.id)
+        assert updated_teacher.classroom == self.classroom
+        assert set(updated_teacher.assigned_subjects.all()) == set(
+            self.assigned_subjects
+        )
 
-        def test_update_teacher_profile_as_a_teacher_permission_denied(self):
-            teacher = Teacher.objects.get(id=1)
-            data = {
-                "classroom": self.classroom.pk,
-                "assigned_subjects": [subject.pk for subject in self.assigned_subjects],
-            }
-            response = self.client.patch(
-                reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
-                data=data,
-                format="json",
-                HTTP_AUTHORIZATION=f"Token {self.teachers_token}",
-            )
+    def test_update_teacher_profile_as_a_teacher_permission_denied(self):
+        teacher = Teacher.objects.get(id=1)
+        data = {
+            "classroom": self.classroom.pk,
+            "assigned_subjects": [subject.pk for subject in self.assigned_subjects],
+        }
+        response = self.client.patch(
+            reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
+            data=data,
+            format="json",
+            HTTP_AUTHORIZATION=f"Token {self.teachers_token}",
+        )
 
-            assert response.status_code == status.HTTP_403_FORBIDDEN
-            updated_teacher = Teacher.objects.get(id=teacher.id)
-            assert updated_teacher.classroom != self.classroom
-            assert set(updated_teacher.assigned_subjects.all()) != set(
-                self.assigned_subjects
-            )
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+        updated_teacher = Teacher.objects.get(id=teacher.id)
+        assert updated_teacher.classroom != self.classroom
+        assert set(updated_teacher.assigned_subjects.all()) != set(
+            self.assigned_subjects
+        )
 
-        def test_update_teacher_profile_as_a_student_permission_denied(self):
-            teacher = Teacher.objects.get(id=1)
-            data = {
-                "classroom": self.classroom.pk,
-                "assigned_subjects": [subject.pk for subject in self.assigned_subjects],
-            }
-            response = self.client.patch(
-                reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
-                data=data,
-                format="json",
-                HTTP_AUTHORIZATION=f"Token {self.student_token}",
-            )
+    def test_update_teacher_profile_as_a_student_permission_denied(self):
+        teacher = Teacher.objects.get(id=1)
+        data = {
+            "classroom": self.classroom.pk,
+            "assigned_subjects": [subject.pk for subject in self.assigned_subjects],
+        }
+        response = self.client.patch(
+            reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
+            data=data,
+            format="json",
+            HTTP_AUTHORIZATION=f"Token {self.student_token}",
+        )
 
-            assert response.status_code == status.HTTP_403_FORBIDDEN
-            updated_teacher = Teacher.objects.get(id=teacher.id)
-            assert updated_teacher.classroom != self.classroom
-            assert set(updated_teacher.assigned_subjects.all()) != set(
-                self.assigned_subjects
-            )
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+        updated_teacher = Teacher.objects.get(id=teacher.id)
+        assert updated_teacher.classroom != self.classroom
+        assert set(updated_teacher.assigned_subjects.all()) != set(
+            self.assigned_subjects
+        )
 
     def test_update_teacher_profile_without_authorization(self):
         teacher = Teacher.objects.get(id=1)

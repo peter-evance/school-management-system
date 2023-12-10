@@ -112,11 +112,30 @@ def setup_users():
 
 @pytest.fixture
 def setup_subject_data():
-    subject_data = {
-        "title": "English",
-        "code": "ENG",
+    from core.serializers import ClassRoomSerializer, SubjectSerializer
+
+    def create_and_save(serializer):
+        assert serializer.is_valid()
+        return serializer.save()
+
+    classroom_data = {
+        "title": ClassRoomTitleChoices.JUNIOR_SECONDARY_SCHOOL_3,
+        "code": ClassRoomCodeChoices.JSS_3,
+        "capacity": 200,
+        "stream": "A",
     }
-    return subject_data
+    classroom = create_and_save(ClassRoomSerializer(data=classroom_data))
+    subject_data = {
+        "title": SubjectTitleChoices.ENGLISH_LANGUAGE,
+        "code": "ENG",
+        "class_room": classroom.pk,
+    }
+    subject_data_obj = {
+        "title": SubjectTitleChoices.ENGLISH_LANGUAGE,
+        "code": "ENG",
+        "class_room": classroom,
+    }
+    return {"subject_data": subject_data, "subject_data_obj": subject_data_obj}
 
 
 @pytest.fixture()
@@ -174,9 +193,21 @@ def setup_student_profile_data():
     classroom = create_and_save(ClassRoomSerializer(data=classroom_data))
 
     subjects_data = [
-        {"title": "English", "code": "ENG"},
-        {"title": "Mathematics", "code": "MTH"},
-        {"title": "Biology", "code": "BIO"},
+        {
+            "title": SubjectTitleChoices.ENGLISH_LANGUAGE,
+            "code": "ENG",
+            "class_room": classroom.pk,
+        },
+        {
+            "title": SubjectTitleChoices.MATHEMATICS,
+            "code": "MTH",
+            "class_room": classroom.pk,
+        },
+        {
+            "title": SubjectTitleChoices.BIOLOGY,
+            "code": "BIO",
+            "class_room": classroom.pk,
+        },
     ]
     enrolled_subjects = [
         create_and_save(SubjectSerializer(data=sub_data)) for sub_data in subjects_data

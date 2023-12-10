@@ -1,7 +1,9 @@
+from core.filters import StudentFilter
 from core.models.student import Student
 from core.permissions import *
 from core.serializers import *
 from rest_framework.viewsets import ModelViewSet
+from django_filters import rest_framework as filters
 
 
 class SubjectViewSet(ModelViewSet):
@@ -25,7 +27,10 @@ class TeacherViewSet(ModelViewSet):
 class StudentViewSet(ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
-    permission_classes = [IsTeacherOrAdmin]
+    # permission_classes = [IsTeacherOrAdmin]
+
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = StudentFilter
 
 
 class AdminViewSet(ModelViewSet):

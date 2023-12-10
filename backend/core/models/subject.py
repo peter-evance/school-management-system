@@ -1,15 +1,22 @@
 from django.db import models
+from core.models.classroom import ClassRoom
 from core.choices import *
 
 
 class Subject(models.Model):
-    title = models.CharField(max_length=20, unique=True)
-    code = models.CharField(max_length=10, unique=True)
+    title = models.CharField(max_length=30, choices=SubjectTitleChoices.choices)
+    code = models.CharField(max_length=10)
+    class_room = models.ForeignKey(ClassRoom, on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # Enforce uniqueness for title and code within a specific class
+        unique_together = ["title", "code", "class_room"]
+
     # max_marks = models.PositiveIntegerField(default=100)
     # min_mark = models.PositiveIntegerField(default=40)
     # mark_obtained = models.PositiveIntegerField(default=0, null=True)
     # grade = models.CharField(max_length=10, null=True)
-    added_at = models.DateTimeField(auto_now_add=True)
 
     # def grading_system(self):
     #     """

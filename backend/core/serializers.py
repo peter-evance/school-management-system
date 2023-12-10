@@ -12,9 +12,10 @@ from rest_framework.serializers import (
 
 
 class SubjectSerializer(ModelSerializer):
+    # class_room = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
     class Meta:
         model = Subject
-        fields = ["title", "code", "added_at"]
+        fields = ["title", "code", "class_room", "added_at"]
 
 
 class ClassRoomSerializer(ModelSerializer):
@@ -31,7 +32,7 @@ class TeacherSerializer(ModelSerializer):
     )
 
     class Meta:
-        # depth = True
+        depth = True
         model = Teacher
         fields = ["user", "classroom", "created_at", "assigned_subjects"]
 

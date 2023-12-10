@@ -5,4 +5,4 @@ from django_filters import rest_framework as filters
 class CustomUserFilter(filters.FilterSet):
     class Meta:
         model = CustomUser
-        fields = ["username", "first_name"]
+        fields = ["role", "first_name"]

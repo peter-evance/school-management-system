@@ -127,12 +127,12 @@ def setup_subject_data():
     classroom = create_and_save(ClassRoomSerializer(data=classroom_data))
     subject_data = {
         "title": SubjectTitleChoices.ENGLISH_LANGUAGE,
-        "code": "ENG",
+        "code": SubjectCodeChoices.ENG,
         "class_room": classroom.pk,
     }
     subject_data_obj = {
         "title": SubjectTitleChoices.ENGLISH_LANGUAGE,
-        "code": "ENG",
+        "code": SubjectCodeChoices.ENG,
         "class_room": classroom,
     }
     return {"subject_data": subject_data, "subject_data_obj": subject_data_obj}
@@ -195,17 +195,17 @@ def setup_student_profile_data():
     subjects_data = [
         {
             "title": SubjectTitleChoices.ENGLISH_LANGUAGE,
-            "code": "ENG",
+            "code": SubjectCodeChoices.ENG,
             "class_room": classroom.pk,
         },
         {
             "title": SubjectTitleChoices.MATHEMATICS,
-            "code": "MTH",
+            "code": SubjectCodeChoices.MTH,
             "class_room": classroom.pk,
         },
         {
             "title": SubjectTitleChoices.BIOLOGY,
-            "code": "BIO",
+            "code": SubjectCodeChoices.BIO,
             "class_room": classroom.pk,
         },
     ]

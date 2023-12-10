@@ -137,12 +137,14 @@ class TestSubjectViewSet:
         )
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-
     """ UPDATE SUBJECT (PATCH)"""
 
     def test_update_subject_details_as_an_admin(self):
         subject = self.create_and_save()
-        data = {"code": "GST"}
+        data = {
+            "title": SubjectTitleChoices.CIVIC_EDUCATION,
+            "code": SubjectCodeChoices.CVE,
+        }
         response = self.client.patch(
             reverse("core:subjects-detail", kwargs={"pk": subject.pk}),
             data=data,
@@ -150,12 +152,15 @@ class TestSubjectViewSet:
             HTTP_AUTHORIZATION=f"Token {self.admin_token}",
         )
         assert response.status_code == status.HTTP_200_OK
-        assert response.data["title"] == subject.title
-        assert Subject.objects.get(pk=subject.pk).code == "GST"
+        assert response.data["title"] == data["title"]
+        assert Subject.objects.get(pk=subject.pk).code == SubjectCodeChoices.CVE
 
     def test_update_subject_details_as_a_teacher(self):
         subject = self.create_and_save()
-        data = {"code": "GST"}
+        data = {
+            "title": SubjectTitleChoices.CIVIC_EDUCATION,
+            "code": SubjectCodeChoices.CVE,
+        }
         response = self.client.patch(
             reverse("core:subjects-detail", kwargs={"pk": subject.pk}),
             data=data,
@@ -163,12 +168,15 @@ class TestSubjectViewSet:
             HTTP_AUTHORIZATION=f"Token {self.teachers_token}",
         )
         assert response.status_code == status.HTTP_200_OK
-        assert response.data["title"] == subject.title
-        assert Subject.objects.get(pk=subject.pk).code == "GST"
+        assert response.data["title"] == data["title"]
+        assert Subject.objects.get(pk=subject.pk).code == SubjectCodeChoices.CVE
 
     def test_update_subject_details_as_a_student_permission_denied(self):
         subject = self.create_and_save()
-        data = {"code": "GST"}
+        data = {
+            "title": SubjectTitleChoices.CIVIC_EDUCATION,
+            "code": SubjectCodeChoices.CVE,
+        }
         response = self.client.patch(
             reverse("core:subjects-detail", kwargs={"pk": subject.pk}),
             data=data,
@@ -176,19 +184,22 @@ class TestSubjectViewSet:
             HTTP_AUTHORIZATION=f"Token {self.student_token}",
         )
         assert response.status_code == status.HTTP_403_FORBIDDEN
-        assert Subject.objects.get(pk=subject.pk).code != "GST"
+        assert Subject.objects.get(pk=subject.pk).code != SubjectCodeChoices.CVE
 
     def test_update_subject_details_without_authorizarion(self):
         """This returns unauthorised user 401"""
         subject = self.create_and_save()
-        data = {"code": "GST"}
+        data = {
+            "title": SubjectTitleChoices.CIVIC_EDUCATION,
+            "code": SubjectCodeChoices.CVE,
+        }
         response = self.client.patch(
             reverse("core:subjects-detail", kwargs={"pk": subject.pk}),
             data=data,
             format="json",
         )
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
-        assert Subject.objects.get(pk=subject.pk).code != "GST"
+        assert Subject.objects.get(pk=subject.pk).code != SubjectCodeChoices.CVE
 
     """ DELETE SUBJECT (DELETE)"""
 
@@ -237,7 +248,7 @@ class TestSubjectViewSet:
         assert Subject.objects.filter(pk=subject.pk).exists()
 
 
-""" TEST CLASSROOM VIEWSET """
+# """ TEST CLASSROOM VIEWSET """
 
 
 @pytest.mark.django_db

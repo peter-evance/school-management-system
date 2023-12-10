@@ -1,4 +1,4 @@
-from core.filters import StudentFilter
+from core.filters import StudentFilter, SubjectFilter
 from core.models.student import Student
 from core.permissions import *
 from core.serializers import *
@@ -10,6 +10,9 @@ class SubjectViewSet(ModelViewSet):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
     permission_classes = [IsTeacherOrAdmin]
+
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = SubjectFilter
 
 
 class ClassRoomViewSet(ModelViewSet):

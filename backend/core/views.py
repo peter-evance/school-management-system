@@ -27,7 +27,7 @@ class TeacherViewSet(ModelViewSet):
 class StudentViewSet(ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
-    # permission_classes = [IsTeacherOrAdmin]
+    permission_classes = [IsTeacherOrAdmin]
 
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = StudentFilter

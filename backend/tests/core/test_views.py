@@ -24,7 +24,7 @@ class TestSubjectViewSet:
         subject = serializer.save()
         return subject
 
-    """ ADD SUBJECTS (POST)"""
+    # """ ADD SUBJECTS (POST)"""
 
     def test_add_subject_as_a_teacher(self):
         response = self.client.post(
@@ -247,9 +247,36 @@ class TestSubjectViewSet:
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert Subject.objects.filter(pk=subject.pk).exists()
 
+    def test_filter_subjects_by_classroom_as_admin(self):
+        self.create_and_save()
+        filter_query = "?class_room=1"
+        url = f"{reverse('core:subjects-list')}{filter_query}"
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        assert response.status_code == status.HTTP_200_OK
 
-# """ TEST CLASSROOM VIEWSET """
+    def test_filter_subjects_by_classroom_as_teacher(self):
+        self.create_and_save()
+        filter_query = "?class_room=1"
+        url = f"{reverse('core:subjects-list')}{filter_query}"
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {self.teachers_token}')
+        assert response.status_code == status.HTTP_200_OK
 
+    def test_filter_subjects_by_classroom_as_student_permission_denied(self):
+        self.create_and_save()
+        filter_query = "?class_room=1"
+        url = f"{reverse('core:subjects-list')}{filter_query}"
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {self.student_token}')
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_filter_subjects_by_classroom_without_authorization(self):
+        self.create_and_save()
+        filter_query = "?class_room=1"
+        url = f"{reverse('core:subjects-list')}{filter_query}"
+        response = self.client.get(url)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+""" TEST CLASSROOM VIEWSET """
 
 @pytest.mark.django_db
 class TestClassRoomViewSet:
@@ -494,7 +521,6 @@ class TestClassRoomViewSet:
 
 """ TEST StudentViewSet """
 
-
 @pytest.mark.django_db
 class TestStudentViewSet:
     """
@@ -728,7 +754,38 @@ class TestStudentViewSet:
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert Student.objects.filter(id=student.pk).exists()
 
+    def test_filter_students_by_name_as_admin(self):
+        Student.objects.get(id=1)
+        filter_query = "?name=lane"
+        url = f"{reverse('core:students-list')}{filter_query}"
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) != 0
 
+    def test_filter_students_by_name_as_teacher(self):
+        Student.objects.get(id=1)
+        filter_query = "?name=lane"
+        url = f"{reverse('core:students-list')}{filter_query}"
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {self.teachers_token}')
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) != 0
+
+    def test_filter_students_by_name_as_student_permission_denied(self):
+        Student.objects.get(id=1)
+        filter_query = "?name=1"
+        url = f"{reverse('core:students-list')}{filter_query}"
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {self.student_token}')
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    def test_filter_students_by_classroom_without_authorization(self):
+        Student.objects.get(id=1)
+        filter_query = "?name=1"
+        url = f"{reverse('core:students-list')}{filter_query}"
+        response = self.client.get(url)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+""" TEST TeachersViewSet """
 @pytest.mark.django_db
 class TestTeacherViewSet:
     """
@@ -882,3 +939,4 @@ class TestTeacherViewSet:
         )
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert Teacher.objects.filter(id=teacher.pk).exists()
+

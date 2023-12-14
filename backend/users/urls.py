@@ -4,14 +4,14 @@ from rest_framework import routers
 
 from users.views import CustomUserViewSet
 
-app_name = 'users'
+app_name = "users"
 
 
 router = routers.DefaultRouter()
-router.register(r'users', CustomUserViewSet, basename='users')
+router.register(r"users", CustomUserViewSet, basename="users")
 
 urlpatterns = [
     path("login/", TokenCreateView.as_view(), name="login"),
     path("logout/", TokenDestroyView.as_view(), name="logout"),
-    path("", include(router.urls))
+    path("", include(router.urls)),
 ]

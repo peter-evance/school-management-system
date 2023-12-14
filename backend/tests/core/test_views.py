@@ -60,7 +60,6 @@ class TestSubjectViewSet:
         response = self.client.post(
             reverse("core:subjects-list"), self.subject_data, format="json"
         )
-        print(response.data)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert not Subject.objects.filter(title=self.subject_data["title"])
 
@@ -72,7 +71,6 @@ class TestSubjectViewSet:
             reverse("core:subjects-list"),
             HTTP_AUTHORIZATION=f"Token {self.teachers_token}",
         )
-        print(response.data)
         # assert response.status_code == status.HTTP_200_OK
 
     def test_view_subject_as_an_admin(self):
@@ -331,7 +329,6 @@ class TestClassRoomViewSet:
         response = self.client.post(
             reverse("core:classrooms-list"), self.classroom_data, format="json"
         )
-        print(response.data)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert not ClassRoom.objects.filter(title=self.classroom_data["code"])
 
@@ -898,8 +895,6 @@ class TestTeacherViewSet:
 
     def test_delete_teacher_profile_as_an_admin(self):
         teacher = Teacher.objects.get(id=1)
-        print(teacher)
-
         response = self.client.delete(
             reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
             format="json",

@@ -36,7 +36,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(max_length=40, null=True)
     role = models.CharField(max_length=10, choices=RoleChoices.choices)
 
-    REQUIRED_FIELDS = ["first_name", "last_name", "sex", "role"]
+    REQUIRED_FIELDS = ["first_name", "last_name", "sex", "role", "email"]
 
     def get_full_name(self):
         """Return the full name"""

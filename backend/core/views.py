@@ -9,10 +9,16 @@ from django_filters import rest_framework as filters
 class SubjectViewSet(ModelViewSet):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
-    permission_classes = [IsTeacherOrAdmin]
+    # permission_classes = [IsTeacherOrAdmin]
 
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = SubjectFilter
+
+    def get_queryset(self):
+        user_instance = CustomUser.objects.get(id=9)
+        student_instance = Student.objects.get(user=user_instance)
+        enrolled_subjects = student_instance.enrolled_subjects.all()
+        print(enrolled_subjects)
 
 
 class ClassRoomViewSet(ModelViewSet):
@@ -30,7 +36,7 @@ class TeacherViewSet(ModelViewSet):
 class StudentViewSet(ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
-    permission_classes = [IsTeacherOrAdmin]
+    # permission_classes = [IsTeacherOrAdmin]
 
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = StudentFilter

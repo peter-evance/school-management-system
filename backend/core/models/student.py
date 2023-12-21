@@ -32,7 +32,7 @@ class Student(models.Model):
     )
     classroom = models.ForeignKey(ClassRoom, on_delete=models.SET_NULL, null=True)
     enrolled_subjects = models.ManyToManyField(
-        Subject, related_name="enrolled_students"
+        Subject, related_name="student"
     )
     created_at = models.DateTimeField(auto_now_add=True)
 

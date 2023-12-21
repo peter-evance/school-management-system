@@ -6,6 +6,7 @@ from rest_framework.viewsets import ModelViewSet
 from django_filters import rest_framework as filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 
 class SubjectViewSet(ModelViewSet):
@@ -19,7 +20,7 @@ class SubjectViewSet(ModelViewSet):
             permission_classes = [IsTeacherOrAdmin]
 
         else:
-            permission_classes = [IsTeacher]
+            permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
 
@@ -32,13 +33,20 @@ class ClassRoomViewSet(ModelViewSet):
 class TeacherViewSet(ModelViewSet):
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
-    permission_classes = [IsAdmin]
 
+    def get_permissions(self):
+        if self.action in ["create", "destroy", "update", "partial_update"]:
+            permission_classes = [IsAdmin]
+
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+    
     @action(detail=False, methods=["GET"])
     def get_assigned_subjects(self, request):
         try:
             user= CustomUser.objects.get(id=request.user.id)
-            teacher = Teacher.objects.get(id=1)
+            teacher = Teacher.objects.get(user=user.id)
         except Teacher.DoesNotExist:
             return Response(
                 {"detail": "Teacher not found, no subjects to display!"}, status=404
@@ -55,16 +63,24 @@ class TeacherViewSet(ModelViewSet):
 class StudentViewSet(ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
-    permission_classes = [IsTeacherOrAdmin]
+    # permission_classes = [IsTeacherOrAdmin]
 
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = StudentFilter
+
+    def get_permissions(self):
+        if self.action in ["create", "destroy", "update", "partial_update"]:
+            permission_classes = [IsTeacherOrAdmin]
+
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
     @action(detail=False, methods=["GET"])
     def get_enrolled_subjects(self, request):
         try:
             user= CustomUser.objects.get(id=request.user.id)
-            student = Student.objects.get(id=4)
+            student = Student.objects.get(user=user.id)
         except Student.DoesNotExist:
             return Response(
                 {"detail": "Student not found, no subjects to display!"}, status=404

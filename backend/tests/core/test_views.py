@@ -82,13 +82,13 @@ class TestSubjectViewSet:
         )
         assert response.status_code == status.HTTP_200_OK
 
-    def test_view_subject_as_a_student_permission_denied(self):
-        Subject.objects.create(**self.subject_data_obj)
-        response = self.client.get(
-            reverse("core:subjects-list"),
-            HTTP_AUTHORIZATION=f"Token {self.student_token}",
-        )
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+    # def test_view_subject_as_a_student_permission_denied(self):
+    #     Subject.objects.create(**self.subject_data_obj)
+    #     response = self.client.get(
+    #         reverse("core:subjects-list"),
+    #         HTTP_AUTHORIZATION=f"Token {self.student_token}",
+    #     )
+    #     assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_view_subject_with_no_authorizarion_unauthorized(self):
         """This returns unauthorised user 401"""
@@ -119,13 +119,13 @@ class TestSubjectViewSet:
         assert response.status_code == status.HTTP_200_OK
         assert response.data["title"] == subject.title
 
-    def test_view_subject_details_as_a_student_permission_denied(self):
-        subject = self.create_and_save()
-        response = self.client.get(
-            reverse("core:subjects-detail", kwargs={"pk": subject.pk}),
-            HTTP_AUTHORIZATION=f"Token {self.student_token}",
-        )
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+    # def test_view_subject_details_as_a_student_permission_denied(self):
+    #     subject = self.create_and_save()
+    #     response = self.client.get(
+    #         reverse("core:subjects-detail", kwargs={"pk": subject.pk}),
+    #         HTTP_AUTHORIZATION=f"Token {self.student_token}",
+    #     )
+    #     assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_view_subject_details_without_authorizarion(self):
         """This returns unauthorised user 401"""
@@ -259,12 +259,12 @@ class TestSubjectViewSet:
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {self.teachers_token}')
         assert response.status_code == status.HTTP_200_OK
 
-    def test_filter_subjects_by_classroom_as_student_permission_denied(self):
-        self.create_and_save()
-        filter_query = "?class_room=1"
-        url = f"{reverse('core:subjects-list')}{filter_query}"
-        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {self.student_token}')
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+    # def test_filter_subjects_by_classroom_as_student_permission_denied(self):
+    #     self.create_and_save()
+    #     filter_query = "?class_room=1"
+    #     url = f"{reverse('core:subjects-list')}{filter_query}"
+    #     response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {self.student_token}')
+    #     assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_filter_subjects_by_classroom_without_authorization(self):
         self.create_and_save()
@@ -767,12 +767,12 @@ class TestStudentViewSet:
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) != 0
 
-    def test_filter_students_by_name_as_student_permission_denied(self):
-        Student.objects.get(id=1)
-        filter_query = "?name=1"
-        url = f"{reverse('core:students-list')}{filter_query}"
-        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {self.student_token}')
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+    # def test_filter_students_by_name_as_student_permission_denied(self):
+    #     Student.objects.get(id=1)
+    #     filter_query = "?name=1"
+    #     url = f"{reverse('core:students-list')}{filter_query}"
+    #     response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {self.student_token}')
+    #     assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_filter_students_by_classroom_without_authorization(self):
         Student.objects.get(id=1)

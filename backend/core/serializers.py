@@ -15,11 +15,12 @@ class SubjectSerializer(ModelSerializer):
     # class_room = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
     class Meta:
         model = Subject
-        fields = ["title", "code", "class_room", "added_at"]
+        fields = ["id", "title", "code", "class_room", "added_at"]
 
 
 class ClassRoomSerializer(ModelSerializer):
     class Meta:
+        depth = True
         model = ClassRoom
         fields = ["title", "code", "capacity", "stream"]
 

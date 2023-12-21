@@ -15,7 +15,7 @@ class ClassRoom(models.Model):
     )
     capacity = models.PositiveIntegerField(default=1)
     stream = models.CharField(max_length=1, choices=ClassRoomStreamChoices.choices)
-
+    
     def update_class_code(self):
         title_to_code_mapping = {
             ClassRoomTitleChoices.JUNIOR_SECONDARY_SCHOOL_1: ClassRoomCodeChoices.JSS_1,

@@ -27,27 +27,21 @@ class ClassRoomSerializer(ModelSerializer):
 class TeacherSerializer(ModelSerializer):
     user = PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     classroom = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
-    assigned_subjects = PrimaryKeyRelatedField(
-        queryset=Subject.objects.all(), many=True
-    )
 
     class Meta:
-        depth = True
+        # depth = True
         model = Teacher
-        fields = ["user", "classroom", "created_at", "assigned_subjects"]
+        fields = ["id","user", "classroom", "created_at", "assigned_subjects"]
 
 
 class StudentSerializer(ModelSerializer):
     user = PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     classroom = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
-    enrolled_subjects = PrimaryKeyRelatedField(
-        queryset=Subject.objects.all(), many=True
-    )
-
     class Meta:
-        depth = True
+        # depth = True
         model = Student
         fields = [
+            "id",
             "user",
             "classroom",
             "created_at",

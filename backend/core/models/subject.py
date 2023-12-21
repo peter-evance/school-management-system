@@ -32,6 +32,10 @@ class Subject(models.Model):
 
     class Meta:
         unique_together = ["title", "code", "class_room"]
+        
+        
+    def __str__(self):
+        return f"{self.title}"
 
     # max_marks = models.PositiveIntegerField(default=100)
     # min_mark = models.PositiveIntegerField(default=40)

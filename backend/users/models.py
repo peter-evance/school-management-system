@@ -38,6 +38,7 @@ class CustomUser(AbstractUser):
 
     REQUIRED_FIELDS = ["first_name", "last_name", "sex", "role", "email"]
 
+    @property
     def get_full_name(self):
         """Return the full name"""
         return f"{self.first_name} {self.last_name}"
@@ -49,14 +50,5 @@ class CustomUser(AbstractUser):
         return CustomUser.objects.filter(role=role)
 
     def __str__(self):
-        return self.get_full_name()
+        return self.get_full_name
 
-    # def save(self, *args, **kwargs):
-    #     from core.models import Student
-    #     print("HEY I AM TRIGGERED FROM THE SAVE METHOD")
-    #     if not self.pk and self.role == self.RoleChoices.STUDENT:
-    #         student: Student = Student.objects.create(user=self)
-
-    #         print(student.get_reg_no)
-
-    #     super().save(*args, **kwargs)

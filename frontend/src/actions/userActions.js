@@ -42,4 +42,3 @@ export const logout = () => (dispatch) => {
     type: USER_LOGOUT,
   })
 }
-

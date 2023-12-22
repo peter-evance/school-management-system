@@ -10,7 +10,7 @@ from users.models import CustomUser
 class CustomUserViewSet(ModelViewSet):
     queryset = CustomUser.objects.all()
 
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (filters.DjangoFilterBackend)
     filterset_class = CustomUserFilter
 
     def get_serializer_class(self):

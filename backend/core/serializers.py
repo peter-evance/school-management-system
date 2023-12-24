@@ -22,7 +22,7 @@ class ClassRoomSerializer(ModelSerializer):
     class Meta:
         depth = True
         model = ClassRoom
-        fields = ["title", "code", "capacity", "stream"]
+        fields = ["id", "title", "code", "capacity", "stream"]
 
 
 class TeacherSerializer(ModelSerializer):

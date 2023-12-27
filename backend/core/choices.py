@@ -44,6 +44,7 @@ class SubjectTitleChoices(models.TextChoices):
     GOVERNMENT = "GOVERNMENT"
     COMMERCE = "COMMERCE"
 
+
 class SubjectCodeChoices(models.TextChoices):
     ENG = "ENG"
     MTH = "MTH"
@@ -61,3 +62,9 @@ class SubjectCodeChoices(models.TextChoices):
     MUSIC = "MUSIC"
     GOV = "GOV"
     COMMERCE = "COMMERCE"
+
+
+class ExamType(models.TextChoices):
+    MIDTERM = "Mid Term"
+    FINAL = "Final Exam"
+    QUIZ = "Quiz"

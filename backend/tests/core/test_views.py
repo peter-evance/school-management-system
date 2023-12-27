@@ -1,3 +1,4 @@
+from datetime import timedelta
 import pytest
 from core.choices import *
 from core.serializers import *
@@ -249,14 +250,16 @@ class TestSubjectViewSet:
         self.create_and_save()
         filter_query = "?class_room=1"
         url = f"{reverse('core:subjects-list')}{filter_query}"
-        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f"Token {self.admin_token}")
         assert response.status_code == status.HTTP_200_OK
 
     def test_filter_subjects_by_classroom_as_teacher(self):
         self.create_and_save()
         filter_query = "?class_room=1"
         url = f"{reverse('core:subjects-list')}{filter_query}"
-        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {self.teachers_token}')
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=f"Token {self.teachers_token}"
+        )
         assert response.status_code == status.HTTP_200_OK
 
     # def test_filter_subjects_by_classroom_as_student_permission_denied(self):
@@ -275,6 +278,7 @@ class TestSubjectViewSet:
 
 
 """ TEST CLASSROOM VIEWSET """
+
 
 @pytest.mark.django_db
 class TestClassRoomViewSet:
@@ -518,6 +522,7 @@ class TestClassRoomViewSet:
 
 """ TEST StudentViewSet """
 
+
 @pytest.mark.django_db
 class TestStudentViewSet:
     """
@@ -755,7 +760,7 @@ class TestStudentViewSet:
         Student.objects.get(id=1)
         filter_query = "?name=lane"
         url = f"{reverse('core:students-list')}{filter_query}"
-        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {self.admin_token}')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f"Token {self.admin_token}")
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) != 0
 
@@ -763,7 +768,9 @@ class TestStudentViewSet:
         Student.objects.get(id=1)
         filter_query = "?name=lane"
         url = f"{reverse('core:students-list')}{filter_query}"
-        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {self.teachers_token}')
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=f"Token {self.teachers_token}"
+        )
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) != 0
 
@@ -783,6 +790,8 @@ class TestStudentViewSet:
 
 
 """ TEST TeachersViewSet """
+
+
 @pytest.mark.django_db
 class TestTeacherViewSet:
     """
@@ -935,3 +944,95 @@ class TestTeacherViewSet:
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert Teacher.objects.filter(id=teacher.pk).exists()
 
+
+@pytest.mark.django_db
+class TestExamViewSet:
+    @pytest.fixture(autouse=True)
+    def setup(self, setup_users, setup_exam_data):
+        self.client = setup_users["client"]
+        self.tokens = {
+            "teacher": setup_users["teacher_token"],
+            "student": setup_users["student_token"],
+            "admin": setup_users["admin_token"],
+        }
+
+        self.exam_data = setup_exam_data
+
+    @pytest.mark.parametrize(
+        "user_type, expected_status",
+        [
+            ("admin", status.HTTP_201_CREATED),
+            ("teacher", status.HTTP_201_CREATED),
+            ("student", status.HTTP_403_FORBIDDEN),
+        ],
+    )
+    def test_create_exam(self, user_type, expected_status):
+        response = self.client.post(
+            reverse("core:exams-list"),
+            data=self.exam_data,
+            format="json",
+            HTTP_AUTHORIZATION=f"Token {self.tokens[user_type]}",
+        )
+        assert response.status_code == expected_status
+
+    @pytest.mark.parametrize(
+        "user_type, expected_status",
+        [
+            ("admin", status.HTTP_200_OK),
+            ("teacher", status.HTTP_200_OK),
+            ("student", status.HTTP_403_FORBIDDEN),
+        ],
+    )
+    def test_retrieve_exam(self, user_type, expected_status):
+        response = self.client.get(
+            reverse("core:exams-list"),
+            format="json",
+            HTTP_AUTHORIZATION=f"Token {self.tokens[user_type]}",
+        )
+        assert response.status_code == expected_status
+
+    @pytest.mark.parametrize(
+        "user_type, expected_status",
+        [
+            ("admin", status.HTTP_200_OK),
+            ("teacher", status.HTTP_200_OK),
+            ("student", status.HTTP_403_FORBIDDEN),
+        ],
+    )
+    def test_update_exam(self, user_type, expected_status):
+        serializer = ExamSerializer(data=self.exam_data)
+        assert serializer.is_valid()
+        exam_record = serializer.save()
+
+        exam_update_data = {"duration": timedelta(hours=3)}
+
+        response = self.client.patch(
+            reverse("core:exams-detail", kwargs={"pk": exam_record.id}),
+            data=exam_update_data,
+            format="json",
+            HTTP_AUTHORIZATION=f"Token {self.tokens[user_type]}",
+        )
+        assert response.status_code == expected_status
+
+    @pytest.mark.parametrize(
+        "user_type, expected_status",
+        [
+            ("admin", status.HTTP_204_NO_CONTENT),
+            ("teacher", status.HTTP_204_NO_CONTENT),
+            ("student", status.HTTP_403_FORBIDDEN),
+        ],
+    )
+    def test_delete_exam(self, user_type, expected_status):
+        serializer = ExamSerializer(data=self.exam_data)
+        assert serializer.is_valid()
+        exam_record = serializer.save()
+
+        exam_update_data = {"duration": timedelta(hours=3)}
+
+        response = self.client.delete(
+            reverse("core:exams-detail", kwargs={"pk": exam_record.id}),
+            format="json",
+            HTTP_AUTHORIZATION=f"Token {self.tokens[user_type]}",
+        )
+        assert response.status_code == expected_status
+        print(response.data)

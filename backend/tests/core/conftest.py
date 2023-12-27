@@ -2,6 +2,9 @@ from datetime import timedelta
 from rest_framework import status
 from django.utils import timezone
 import pytest
+from core.models.exams import Exam
+from core.serializers import ClassRoomSerializer, ExamSerializer, SubjectSerializer
+from users.serializers import CustomUserCreateSerializer
 from core.models.classroom import ClassRoom
 from core.choices import *
 from users.models import CustomUser
@@ -223,3 +226,90 @@ def setup_student_profile_data():
         "enrolled_subjects": enrolled_subjects,
         "student_profile_data": student_profile_data,
     }
+
+
+@pytest.fixture
+def setup_exam_data():
+    def create_and_save(serializer):
+        assert serializer.is_valid()
+        return serializer.save()
+
+    classroom_data = {
+        "title": ClassRoomTitleChoices.JUNIOR_SECONDARY_SCHOOL_3,
+        "code": ClassRoomCodeChoices.JSS_3,
+        "capacity": 200,
+        "stream": "A",
+    }
+
+    classroom = create_and_save(ClassRoomSerializer(data=classroom_data))
+
+    subject_data = {
+        "title": SubjectTitleChoices.ENGLISH_LANGUAGE,
+        "code": SubjectCodeChoices.ENG,
+        "class_room": classroom.id,
+    }
+    subject = create_and_save(SubjectSerializer(data=subject_data))
+
+    exam_data = {
+        "exam_type": Exam.ExamType.FINAL,
+        "subject": subject.id,
+        "duration": timedelta(hours=2, minutes=30),
+        "max_marks": 100,
+    }
+    
+    return exam_data
+
+
+@pytest.fixture
+def setup_exam_result_data():
+    def create_and_save(serializer):
+        assert serializer.is_valid()
+        return serializer.save()
+
+    classroom_data = {
+        "title": ClassRoomTitleChoices.JUNIOR_SECONDARY_SCHOOL_3,
+        "code": ClassRoomCodeChoices.JSS_3,
+        "capacity": 200,
+        "stream": "A",
+    }
+
+    classroom = create_and_save(ClassRoomSerializer(data=classroom_data))
+
+    subject_data = {
+        "title": SubjectTitleChoices.ENGLISH_LANGUAGE,
+        "code": SubjectCodeChoices.ENG,
+        "class_room": classroom.id,
+    }
+    subject = create_and_save(SubjectSerializer(data=subject_data))
+
+    exam = {
+        "exam_type": Exam.ExamType.FINAL,
+        "subject": subject.id,
+        "duration": timedelta(hours=2, minutes=30),
+        "max_marks": 100,
+    }
+    
+    exam_data = create_and_save(ExamSerializer(data=exam_data))
+    
+    
+    student_data = {
+        "username": "jane",
+        "first_name": "lane",
+        "last_name": "ademic",
+        "sex": CustomUser.SexChoices.MALE,
+        "role": CustomUser.RoleChoices.STUDENT,
+        "password": "12345678QQ",
+        "date_of_birth": timezone.now().date(),
+    }
+    user = create_and_save(CustomUserCreateSerializer(data=student_data))
+
+    
+    result_data = { 
+                   "student": 20,
+                   "exam" :exam_data.id,
+                   "marks_obtained": 70
+                   }
+    
+    return result_data
+                                
+                                

@@ -1,3 +1,5 @@
+from core.models.results import SubjectResult
+from core.models.exams import Exam
 from users.models import CustomUser
 from core.models.admin import Admin
 from core.models.student import Student
@@ -55,3 +57,15 @@ class AdminSerializer(ModelSerializer):
     class Meta:
         model = Admin
         fields = ["user", "created"]
+
+
+class ExamSerializer(ModelSerializer):
+    class Meta:
+        model = Exam
+        fields = ("exam_type", "subject", "scheduled_date", "duration", "max_marks", "instructions")
+        
+
+class SubjectResultSerializer(ModelSerializer):
+    class Meta:
+        model = SubjectResult
+        fields = ("student", "exam", "marks_obtained", "remarks")

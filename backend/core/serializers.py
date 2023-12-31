@@ -34,12 +34,13 @@ class TeacherSerializer(ModelSerializer):
     class Meta:
         # depth = True
         model = Teacher
-        fields = ["id","user", "classroom", "created_at", "assigned_subjects"]
+        fields = ["id", "user", "classroom", "created_at", "assigned_subjects"]
 
 
 class StudentSerializer(ModelSerializer):
     user = PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     classroom = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
+
     class Meta:
         # depth = True
         model = Student
@@ -62,8 +63,15 @@ class AdminSerializer(ModelSerializer):
 class ExamSerializer(ModelSerializer):
     class Meta:
         model = Exam
-        fields = ("exam_type", "subject", "scheduled_date", "duration", "max_marks", "instructions")
-        
+        fields = (
+            "exam_type",
+            "subject",
+            "scheduled_date",
+            "duration",
+            "max_marks",
+            "instructions",
+        )
+
 
 class SubjectResultSerializer(ModelSerializer):
     class Meta:

@@ -59,7 +59,7 @@ def test_user_registration(client):
 
 @pytest.mark.django_db
 def test_profile_image_upload(client):
-    # Create a user for testing
+    # Create a user for testin
     user_data = {
         "username": "ademic",
         "first_name": "michael",

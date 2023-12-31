@@ -1,3 +1,5 @@
+from core.models.results import SubjectResult
+from core.models.exams import Exam
 from users.models import CustomUser
 from core.models.admin import Admin
 from core.models.student import Student
@@ -22,7 +24,7 @@ class ClassRoomSerializer(ModelSerializer):
     class Meta:
         depth = True
         model = ClassRoom
-        fields = ["title", "code", "capacity", "stream"]
+        fields = ["id", "title", "code", "capacity", "stream"]
 
 
 class TeacherSerializer(ModelSerializer):
@@ -32,12 +34,13 @@ class TeacherSerializer(ModelSerializer):
     class Meta:
         # depth = True
         model = Teacher
-        fields = ["id","user", "classroom", "created_at", "assigned_subjects"]
+        fields = ["id", "user", "classroom", "created_at", "assigned_subjects"]
 
 
 class StudentSerializer(ModelSerializer):
     user = PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     classroom = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
+
     class Meta:
         # depth = True
         model = Student
@@ -55,3 +58,22 @@ class AdminSerializer(ModelSerializer):
     class Meta:
         model = Admin
         fields = ["user", "created"]
+
+
+class ExamSerializer(ModelSerializer):
+    class Meta:
+        model = Exam
+        fields = (
+            "exam_type",
+            "subject",
+            "scheduled_date",
+            "duration",
+            "max_marks",
+            "instructions",
+        )
+
+
+class SubjectResultSerializer(ModelSerializer):
+    class Meta:
+        model = SubjectResult
+        fields = ("student", "exam", "marks_obtained", "remarks")

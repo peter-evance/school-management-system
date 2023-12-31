@@ -1,5 +1,4 @@
 import os
-
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
@@ -60,7 +59,7 @@ def test_user_registration(client):
 
 @pytest.mark.django_db
 def test_profile_image_upload(client):
-    # Create a user for testing
+    # Create a user for testin
     user_data = {
         "username": "ademic",
         "first_name": "michael",
@@ -75,12 +74,12 @@ def test_profile_image_upload(client):
 
     user = CustomUser.objects.get(username="ademic")
 
-    image_path = image_path = os.path.join(BASE_DIR, "fixtures", "sample.png")
+    image_path = os.path.join(BASE_DIR, "fixtures", "example.jpg")
     with open(image_path, "rb") as file:
         image_content = file.read()
 
     image_file = SimpleUploadedFile(
-        "sample_image.png", image_content, content_type="image/png"
+        "sample_image.jpg", image_content, content_type="image/jpg"
     )
 
     # Prepare data for profile image upload

@@ -1,6 +1,9 @@
 from djoser.serializers import UserCreateSerializer, UserSerializer
+from rest_framework.serializers import (
+    ModelSerializer,
+)
 
-from users.models import CustomUser
+from users.models import CustomUser, ProfileImage
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
@@ -33,3 +36,9 @@ class CustomUserSerializer(UserSerializer):
             "email",
             "role",
         )
+
+
+class ProfileImageSerializer(ModelSerializer):
+    class Meta:
+        model = ProfileImage
+        fields = ["user", "image", "thumbnail"]

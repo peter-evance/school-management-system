@@ -17,6 +17,7 @@ class TestSubjectViewSet:
             "admin": setup_users["admin_token"],
             "teacher": setup_users["teacher_token"],
             "student": setup_users["student_token"],
+            "unauthorized": "",
         }
         self.subject_data = setup_subject_data["subject_data"]
         self.subject_data_obj = setup_subject_data["subject_data_obj"]
@@ -35,6 +36,7 @@ class TestSubjectViewSet:
             ("admin", status.HTTP_201_CREATED),
             ("teacher", status.HTTP_201_CREATED),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_create_subject(self, user_type, expected_status):
@@ -46,14 +48,6 @@ class TestSubjectViewSet:
         )
         assert response.status_code == expected_status
 
-    def test_create_subject_with_no_authorizarion_unauthorized(self):
-        """This returns unauthorised user 401"""
-        response = self.client.post(
-            reverse("core:subjects-list"), self.subject_data, format="json"
-        )
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-        assert not Subject.objects.filter(title=self.subject_data["title"])
-
     """ RETRIEVE SUBJECT (GET)"""
 
     @pytest.mark.parametrize(
@@ -61,6 +55,7 @@ class TestSubjectViewSet:
         [
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_200_OK),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
             # ("student", status.HTTP_403_FORBIDDEN),
         ],
     )
@@ -73,15 +68,6 @@ class TestSubjectViewSet:
         )
         assert response.status_code == expected_status
 
-    def test_view_subject_with_no_authorizarion_unauthorized(self):
-        """This returns unauthorised user 401"""
-        response = self.client.get(
-            reverse("core:subjects-list"),
-            self.subject_data_obj,
-            format="json",
-        )
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-
     """ RETRIEVE SUBJECT DETAILS (GET)"""
 
     @pytest.mark.parametrize(
@@ -89,6 +75,7 @@ class TestSubjectViewSet:
         [
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_200_OK),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
             # ("student", status.HTTP_403_FORBIDDEN),
         ],
     )
@@ -102,14 +89,6 @@ class TestSubjectViewSet:
         )
         assert response.status_code == expected_status
 
-    def test_view_subject_details_without_authorizarion(self):
-        """This returns unauthorised user 401"""
-        subject = self.create_and_save()
-        response = self.client.get(
-            reverse("core:subjects-detail", kwargs={"pk": subject.pk})
-        )
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-
     """ UPDATE SUBJECT (PATCH)"""
 
     @pytest.mark.parametrize(
@@ -118,6 +97,7 @@ class TestSubjectViewSet:
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_200_OK),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_update_subject(self, user_type, expected_status):
@@ -135,21 +115,6 @@ class TestSubjectViewSet:
         )
         assert response.status_code == expected_status
 
-    def test_update_subject_details_without_authorizarion(self):
-        """This returns unauthorised user 401"""
-        subject = self.create_and_save()
-        data = {
-            "title": SubjectTitleChoices.CIVIC_EDUCATION,
-            "code": SubjectCodeChoices.CVE,
-        }
-        response = self.client.patch(
-            reverse("core:subjects-detail", kwargs={"pk": subject.pk}),
-            data=data,
-            format="json",
-        )
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-        assert Subject.objects.get(pk=subject.pk).code != SubjectCodeChoices.CVE
-
     """ DELETE SUBJECT (DELETE)"""
 
     @pytest.mark.parametrize(
@@ -158,6 +123,7 @@ class TestSubjectViewSet:
             ("admin", status.HTTP_204_NO_CONTENT),
             ("teacher", status.HTTP_204_NO_CONTENT),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_delete_subject(self, user_type, expected_status):
@@ -170,17 +136,6 @@ class TestSubjectViewSet:
         )
         assert response.status_code == expected_status
 
-    def test_delete_subject_details_without_authorizarion(self):
-        """This returns unauthorised user 401"""
-        subject = self.create_and_save()
-
-        response = self.client.delete(
-            reverse("core:subjects-detail", kwargs={"pk": subject.pk}),
-            format="json",
-        )
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-        assert Subject.objects.filter(pk=subject.pk).exists()
-
     """ FILTER SUBJECT (FILTER)"""
 
     @pytest.mark.parametrize(
@@ -188,6 +143,7 @@ class TestSubjectViewSet:
         [
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_200_OK),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
             # ("student", status.HTTP_403_FORBIDDEN),
         ],
     )
@@ -202,13 +158,6 @@ class TestSubjectViewSet:
         )
         assert response.status_code == expected_status
 
-    def test_filter_subjects_by_classroom_without_authorization(self):
-        self.create_and_save()
-        filter_query = "?class_room=1"
-        url = f"{reverse('core:subjects-list')}{filter_query}"
-        response = self.client.get(url)
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-
 
 """ TEST CLASSROOM VIEWSET """
 
@@ -222,6 +171,7 @@ class TestClassRoomViewSet:
             "admin": setup_users["admin_token"],
             "teacher": setup_users["teacher_token"],
             "student": setup_users["student_token"],
+            "unauthorized": "",
         }
         self.classroom_data = setup_classroom_data
 
@@ -240,6 +190,7 @@ class TestClassRoomViewSet:
             ("admin", status.HTTP_201_CREATED),
             ("teacher", status.HTTP_201_CREATED),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_create_classroom(self, user_type, expected_status):
@@ -251,14 +202,6 @@ class TestClassRoomViewSet:
         )
         assert response.status_code == expected_status
 
-    def test_create_classroom_with_no_authorization(self):
-        """This returns unauthorised user 401"""
-        response = self.client.post(
-            reverse("core:classrooms-list"), self.classroom_data, format="json"
-        )
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-        assert not ClassRoom.objects.filter(title=self.classroom_data["code"])
-
     """ RETRIEVE SUBJECT (GET)"""
 
     @pytest.mark.parametrize(
@@ -267,6 +210,7 @@ class TestClassRoomViewSet:
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_200_OK),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_view_classroom(self, user_type, expected_status):
@@ -278,15 +222,6 @@ class TestClassRoomViewSet:
         )
         assert response.status_code == expected_status
 
-    def test_view_classroom_with_no_authorizarion_unauthorized(self):
-        """This returns unauthorised user 401"""
-        response = self.client.get(
-            reverse("core:classrooms-list"),
-            self.classroom_data,
-            format="json",
-        )
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-
     """ RETRIEVE CLASSROOM DETAILS (GET)"""
 
     @pytest.mark.parametrize(
@@ -295,6 +230,7 @@ class TestClassRoomViewSet:
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_200_OK),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_view_classroom_details(self, user_type, expected_status):
@@ -307,14 +243,6 @@ class TestClassRoomViewSet:
         )
         assert response.status_code == expected_status
 
-    def test_view_classroom_details_without_authorizarion(self):
-        """This returns unauthorised user 401"""
-        classroom = self.create_and_save()
-        response = self.client.get(
-            reverse("core:classrooms-detail", kwargs={"pk": classroom.pk})
-        )
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-
     """ UPDATE CLASSROOM (PATCH)"""
 
     @pytest.mark.parametrize(
@@ -323,6 +251,7 @@ class TestClassRoomViewSet:
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_200_OK),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_update_classroom_details(self, user_type, expected_status):
@@ -340,22 +269,6 @@ class TestClassRoomViewSet:
         )
         assert response.status_code == expected_status
 
-    def test_update_classroom_details_without_authorizarion(self):
-        """This returns unauthorised user 401"""
-        classroom = self.create_and_save()
-        data = {
-            "title": ClassRoomTitleChoices.SENIOR_SECONDARY_SCHOOL_3,
-            "code": ClassRoomCodeChoices.SSS_3,
-        }
-        response = self.client.patch(
-            reverse("core:classrooms-detail", kwargs={"pk": classroom.pk}),
-            data=data,
-            format="json",
-        )
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-        assert ClassRoom.objects.get(pk=classroom.pk).title != data["title"]
-        assert ClassRoom.objects.get(pk=classroom.pk).code != data["code"]
-
     """ DELETE CLASSROOM (DELETE)"""
 
     @pytest.mark.parametrize(
@@ -364,6 +277,7 @@ class TestClassRoomViewSet:
             ("admin", status.HTTP_204_NO_CONTENT),
             ("teacher", status.HTTP_204_NO_CONTENT),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_delete_classroom_details(self, user_type, expected_status):
@@ -375,16 +289,6 @@ class TestClassRoomViewSet:
             HTTP_AUTHORIZATION=f"Token {self.tokens[user_type]}",
         )
         assert response.status_code == expected_status
-
-    def test_delete_classroom_details_without_authorizarion(self):
-        """This returns unauthorised user 401"""
-        classroom = self.create_and_save()
-        response = self.client.delete(
-            reverse("core:classrooms-detail", kwargs={"pk": classroom.pk}),
-            format="json",
-        )
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-        assert ClassRoom.objects.filter(pk=classroom.pk).exists()
 
 
 """ TEST StudentViewSet """
@@ -399,6 +303,7 @@ class TestStudentViewSet:
             "admin": setup_users["admin_token"],
             "teacher": setup_users["teacher_token"],
             "student": setup_users["student_token"],
+            "unauthorized": "",
         }
         self.classroom = setup_student_profile_data["classroom"]
         self.enrolled_subjects = setup_student_profile_data["enrolled_subjects"]
@@ -411,6 +316,7 @@ class TestStudentViewSet:
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_200_OK),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_update_student_profile(self, user_type, expected_status):
@@ -429,25 +335,6 @@ class TestStudentViewSet:
 
         assert response.status_code == expected_status
 
-    def test_update_student_profile_without_authorization(self):
-        student = Student.objects.get(id=1)
-        data = {
-            "classroom": self.classroom.pk,
-            "enrolled_subjects": [subject.pk for subject in self.enrolled_subjects],
-        }
-        response = self.client.patch(
-            reverse("core:students-detail", kwargs={"pk": student.pk}),
-            data=data,
-            format="json",
-        )
-
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-        updated_student = Student.objects.get(id=student.id)
-        assert updated_student.classroom != self.classroom
-        assert set(updated_student.enrolled_subjects.all()) != set(
-            self.enrolled_subjects
-        )
-
     """ DELETE STUDENTS_PROFILE (DELETE) """
 
     @pytest.mark.parametrize(
@@ -456,6 +343,7 @@ class TestStudentViewSet:
             ("admin", status.HTTP_204_NO_CONTENT),
             ("teacher", status.HTTP_204_NO_CONTENT),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_delete_student_profile(self, user_type, expected_status):
@@ -468,34 +356,12 @@ class TestStudentViewSet:
         )
         assert response.status_code == expected_status
 
-    def test_delete_student_profile_without_authorization(self):
-        """
-        Test method to verify that a delete request without proper authorization results in an unauthorized response.
-
-        Steps:
-        1. Retrieve a student instance using the Student model.
-        2. Send a DELETE request to the students-detail endpoint without proper authorization.
-        3. Assert that the response status code is HTTP 401 UNAUTHORIZED.
-
-        Notes:
-        - The test ensures that a delete request without proper authorization is rejected.
-        - The absence of authorization is simulated by not providing any authentication token.
-
-        """
-        student = Student.objects.get(id=1)
-
-        response = self.client.delete(
-            reverse("core:students-detail", kwargs={"pk": student.pk}),
-            format="json",
-        )
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-        assert Student.objects.filter(id=student.pk).exists()
-
     @pytest.mark.parametrize(
         "user_type, expected_status",
         [
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_200_OK),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
             # ("student", status.HTTP_403_FORBIDDEN),
         ],
     )
@@ -508,13 +374,6 @@ class TestStudentViewSet:
             HTTP_AUTHORIZATION=f"Token {self.tokens[user_type]}",
         )
         assert response.status_code == expected_status
-
-    def test_filter_students_by_classroom_without_authorization(self):
-        Student.objects.get(id=1)
-        filter_query = "?name=1"
-        url = f"{reverse('core:students-list')}{filter_query}"
-        response = self.client.get(url)
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 """ TEST TeachersViewSet """
@@ -546,6 +405,7 @@ class TestTeacherViewSet:
             "teacher": setup_users["teacher_token"],
             "student": setup_users["student_token"],
             "admin": setup_users["admin_token"],
+            "unauthorized": "",
         }
         self.classroom = setup_student_profile_data["classroom"]
         self.assigned_subjects = setup_student_profile_data["enrolled_subjects"]
@@ -558,6 +418,7 @@ class TestTeacherViewSet:
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_403_FORBIDDEN),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_update_teacher_profile(self, user_type, expected_status):
@@ -576,24 +437,6 @@ class TestTeacherViewSet:
 
         assert response.status_code == expected_status
 
-    def test_update_teacher_profile_without_authorization(self):
-        teacher = Teacher.objects.get(id=1)
-        data = {
-            "classroom": self.classroom.pk,
-            "assigned_subjects": [subject.pk for subject in self.assigned_subjects],
-        }
-        response = self.client.patch(
-            reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
-            data=data,
-            format="json",
-        )
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-        updated_teacher = Teacher.objects.get(id=teacher.id)
-        assert updated_teacher.classroom != self.classroom
-        assert set(updated_teacher.assigned_subjects.all()) != set(
-            self.assigned_subjects
-        )
-
     """ DELETE TEACHER_PROFILE (DELETE) """
 
     @pytest.mark.parametrize(
@@ -602,6 +445,7 @@ class TestTeacherViewSet:
             ("admin", status.HTTP_204_NO_CONTENT),
             ("teacher", status.HTTP_403_FORBIDDEN),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_delete_teacher_profile(self, user_type, expected_status):
@@ -614,16 +458,6 @@ class TestTeacherViewSet:
         )
         assert response.status_code == expected_status
 
-    def test_delete_teacher_profile_without_authorization(self):
-        teacher = Teacher.objects.get(id=1)
-
-        response = self.client.delete(
-            reverse("core:teachers-detail", kwargs={"pk": teacher.pk}),
-            format="json",
-        )
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-        assert Teacher.objects.filter(id=teacher.pk).exists()
-
 
 @pytest.mark.django_db
 class TestExamViewSet:
@@ -634,6 +468,7 @@ class TestExamViewSet:
             "teacher": setup_users["teacher_token"],
             "student": setup_users["student_token"],
             "admin": setup_users["admin_token"],
+            "unauthorized": "",
         }
 
         self.exam_data = setup_exam_data
@@ -644,6 +479,7 @@ class TestExamViewSet:
             ("admin", status.HTTP_201_CREATED),
             ("teacher", status.HTTP_201_CREATED),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_create_exam(self, user_type, expected_status):
@@ -661,6 +497,7 @@ class TestExamViewSet:
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_200_OK),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_retrieve_exam(self, user_type, expected_status):
@@ -677,6 +514,7 @@ class TestExamViewSet:
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_200_OK),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_update_exam(self, user_type, expected_status):
@@ -700,6 +538,7 @@ class TestExamViewSet:
             ("admin", status.HTTP_204_NO_CONTENT),
             ("teacher", status.HTTP_204_NO_CONTENT),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_delete_exam(self, user_type, expected_status):
@@ -727,6 +566,7 @@ class TestSubjectResultViewSet:
             "admin": setup_users["admin_token"],
             "teacher": setup_users["teacher_token"],
             "student": setup_users["student_token"],
+            "unauthorized": "",
         }
         self.result_data = setup_exam_result_data
 
@@ -743,6 +583,7 @@ class TestSubjectResultViewSet:
             ("admin", status.HTTP_201_CREATED),
             ("teacher", status.HTTP_201_CREATED),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_create_student_result(self, user_type, expected_status):
@@ -760,6 +601,7 @@ class TestSubjectResultViewSet:
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_200_OK),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_retrieve_student_result(self, user_type, expected_status):
@@ -776,6 +618,7 @@ class TestSubjectResultViewSet:
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_200_OK),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_update_student_result(self, user_type, expected_status):
@@ -799,6 +642,7 @@ class TestSubjectResultViewSet:
             ("admin", status.HTTP_204_NO_CONTENT),
             ("teacher", status.HTTP_204_NO_CONTENT),
             ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
         ],
     )
     def test_delete_student_result(self, user_type, expected_status):

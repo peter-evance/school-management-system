@@ -1,10 +1,14 @@
 from django.shortcuts import render
 from users.filters import CustomUserFilter
 from rest_framework.viewsets import ModelViewSet
-from users.serializers import CustomUserCreateSerializer, CustomUserSerializer
+from users.serializers import (
+    CustomUserCreateSerializer,
+    CustomUserSerializer,
+    ProfileImageSerializer,
+)
 from rest_framework.viewsets import ModelViewSet
 from django_filters import rest_framework as filters
-from users.models import CustomUser
+from users.models import CustomUser, ProfileImage
 
 
 class CustomUserViewSet(ModelViewSet):
@@ -17,3 +21,8 @@ class CustomUserViewSet(ModelViewSet):
         if self.action == "create":
             return CustomUserCreateSerializer
         return CustomUserSerializer
+
+
+class ProfileImageViewSet(ModelViewSet):
+    queryset = ProfileImage.objects.all()
+    serializer_class = ProfileImageSerializer

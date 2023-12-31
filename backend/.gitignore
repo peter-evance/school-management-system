@@ -108,6 +108,7 @@ ENV/
 env.bak/
 venv.bak/
 sms/
+media/
 # Spyder project settings
 .spyderproject
 .spyproject

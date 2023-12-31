@@ -251,12 +251,12 @@ def setup_exam_data():
     subject = create_and_save(SubjectSerializer(data=subject_data))
 
     exam_data = {
-        "exam_type": Exam.ExamType.FINAL,
+        "exam_type": ExamType.FINAL,
         "subject": subject.id,
         "duration": timedelta(hours=2, minutes=30),
         "max_marks": 100,
     }
-    
+
     return exam_data
 
 
@@ -283,15 +283,14 @@ def setup_exam_result_data():
     subject = create_and_save(SubjectSerializer(data=subject_data))
 
     exam = {
-        "exam_type": Exam.ExamType.FINAL,
+        "exam_type": ExamType.FINAL,
         "subject": subject.id,
         "duration": timedelta(hours=2, minutes=30),
         "max_marks": 100,
     }
-    
-    exam_data = create_and_save(ExamSerializer(data=exam_data))
-    
-    
+
+    exam_data = create_and_save(ExamSerializer(data=exam))
+
     student_data = {
         "username": "jane",
         "first_name": "lane",
@@ -303,13 +302,5 @@ def setup_exam_result_data():
     }
     user = create_and_save(CustomUserCreateSerializer(data=student_data))
 
-    
-    result_data = { 
-                   "student": 20,
-                   "exam" :exam_data.id,
-                   "marks_obtained": 70
-                   }
-    
+    result_data = {"student": 2, "exam": exam_data.id, "marks_obtained": 70}
     return result_data
-                                
-                                

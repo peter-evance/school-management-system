@@ -37,9 +37,13 @@ class TeacherSerializer(ModelSerializer):
         model = Teacher
         fields = ["id", "user", "classroom", "created_at", "assigned_subjects"]
 
+    def update(self, instance, validated_data):
+        validated_data.pop('user', None)
+        return super().update(instance, validated_data)
+
 
 class StudentSerializer(ModelSerializer):
-    # user = PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
+    user = CustomUserSerializer2()
     # classroom = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
 
     class Meta:
@@ -53,6 +57,10 @@ class StudentSerializer(ModelSerializer):
             "enrolled_subjects",
             "registration_number",
         ]
+
+    def update(self, instance, validated_data):
+        validated_data.pop('user', None)
+        return super().update(instance, validated_data)
 
 
 class AdminSerializer(ModelSerializer):

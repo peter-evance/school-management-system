@@ -8,6 +8,7 @@ from django_filters import rest_framework as filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import MethodNotAllowed
 
 
 class SubjectViewSet(ModelViewSet):
@@ -60,6 +61,12 @@ class TeacherViewSet(ModelViewSet):
 
         return Response(serializer.data, status=200)
 
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+    
+    def update(self, request, *args, **kwargs):
+        raise MethodNotAllowed('PUT','Put Request not Allowed!')
+    
 
 class StudentViewSet(ModelViewSet):
     queryset = Student.objects.all()
@@ -68,13 +75,13 @@ class StudentViewSet(ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = StudentFilter
 
-    # def get_permissions(self):
-    #     if self.action in ["create", "destroy", "update", "partial_update"]:
-    #         permission_classes = [IsTeacherOrAdmin]
+    def get_permissions(self):
+        if self.action in ["create", "destroy", "update", "partial_update"]:
+            permission_classes = [IsTeacherOrAdmin]
 
-    #     else:
-    #         permission_classes = [IsAuthenticated]
-    #     return [permission() for permission in permission_classes]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
     @action(detail=False, methods=["GET"])
     def get_enrolled_subjects(self, request):
@@ -92,6 +99,13 @@ class StudentViewSet(ModelViewSet):
         serializer = SubjectSerializer(enrolled_subjects, many=True)
 
         return Response(serializer.data, status=200)
+    
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+    
+    def update(self, request, *args, **kwargs):
+        raise MethodNotAllowed('PUT','Put Request not Allowed!')
+    
 
 
 class AdminViewSet(ModelViewSet):

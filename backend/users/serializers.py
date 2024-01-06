@@ -37,6 +37,21 @@ class CustomUserSerializer(UserSerializer):
             "role",
         )
 
+class CustomUserSerializer2(ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "sex",
+            "date_of_birth",
+            "address",
+            "email",
+            "role",
+        )
+
 
 class ProfileImageSerializer(ModelSerializer):
     class Meta:

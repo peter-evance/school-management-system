@@ -11,10 +11,11 @@ from rest_framework.serializers import (
     PrimaryKeyRelatedField,
     ReadOnlyField,
 )
+from users.serializers import CustomUserSerializer2
 
 
 class SubjectSerializer(ModelSerializer):
-    # class_room = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
+    class_room = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
     class Meta:
         model = Subject
         fields = ["id", "title", "code", "class_room", "added_at"]
@@ -28,21 +29,21 @@ class ClassRoomSerializer(ModelSerializer):
 
 
 class TeacherSerializer(ModelSerializer):
-    user = PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
-    classroom = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
+    user = CustomUserSerializer2()
+    # classroom = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
 
     class Meta:
-        # depth = True
+        depth = 1
         model = Teacher
         fields = ["id", "user", "classroom", "created_at", "assigned_subjects"]
 
 
 class StudentSerializer(ModelSerializer):
-    user = PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
-    classroom = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
+    # user = PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
+    # classroom = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
 
     class Meta:
-        # depth = True
+        depth = True
         model = Student
         fields = [
             "id",

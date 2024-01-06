@@ -16,32 +16,32 @@ class SubjectViewSet(ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = SubjectFilter
 
-    def get_permissions(self):
-        if self.action in ["create", "destroy", "update", "partial_update"]:
-            permission_classes = [IsTeacherOrAdmin]
+    # def get_permissions(self):
+    #     if self.action in ["create", "destroy", "update", "partial_update"]:
+    #         permission_classes = [IsTeacherOrAdmin]
 
-        else:
-            permission_classes = [IsAuthenticated]
-        return [permission() for permission in permission_classes]
+    #     else:
+    #         permission_classes = [IsAuthenticated]
+    #     return [permission() for permission in permission_classes]
 
 
 class ClassRoomViewSet(ModelViewSet):
     queryset = ClassRoom.objects.all()
     serializer_class = ClassRoomSerializer
-    permission_classes = [IsTeacherOrAdmin]
+    # permission_classes = [IsTeacherOrAdmin]
 
 
 class TeacherViewSet(ModelViewSet):
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
 
-    def get_permissions(self):
-        if self.action in ["create", "destroy", "update", "partial_update"]:
-            permission_classes = [IsAdmin]
+    # def get_permissions(self):
+    #     if self.action in ["create", "destroy", "update", "partial_update"]:
+    #         permission_classes = [IsAdmin]
 
-        else:
-            permission_classes = [IsAuthenticated]
-        return [permission() for permission in permission_classes]
+    #     else:
+    #         permission_classes = [IsAuthenticated]
+    #     return [permission() for permission in permission_classes]
 
     @action(detail=False, methods=["GET"])
     def get_assigned_subjects(self, request):
@@ -68,13 +68,13 @@ class StudentViewSet(ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = StudentFilter
 
-    def get_permissions(self):
-        if self.action in ["create", "destroy", "update", "partial_update"]:
-            permission_classes = [IsTeacherOrAdmin]
+    # def get_permissions(self):
+    #     if self.action in ["create", "destroy", "update", "partial_update"]:
+    #         permission_classes = [IsTeacherOrAdmin]
 
-        else:
-            permission_classes = [IsAuthenticated]
-        return [permission() for permission in permission_classes]
+    #     else:
+    #         permission_classes = [IsAuthenticated]
+    #     return [permission() for permission in permission_classes]
 
     @action(detail=False, methods=["GET"])
     def get_enrolled_subjects(self, request):

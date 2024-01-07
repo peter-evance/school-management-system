@@ -22,7 +22,17 @@ users = [
         "sex": CustomUser.SexChoices.MALE,
         "date_of_birth": timezone.now().date() - timedelta(weeks=50),
         "password": "string@1234",
-    }
+    },
+    {
+        "username": "david",
+        "role": CustomUser.RoleChoices.STUDENT,
+        "first_name": "David",
+        "last_name": "Thomas",
+        "sex": CustomUser.SexChoices.MALE,
+        "date_of_birth": timezone.now().date() - timedelta(weeks=50),
+        "password": "string@1234",
+    },
+
 ]
 
 

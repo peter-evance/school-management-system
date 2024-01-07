@@ -39,6 +39,8 @@ class TeacherSerializer(ModelSerializer):
 
     def update(self, instance, validated_data):
         validated_data.pop('user', None)
+        print(validated_data)
+        print("i am triggered from teacher serializer......................................")
         return super().update(instance, validated_data)
 
 

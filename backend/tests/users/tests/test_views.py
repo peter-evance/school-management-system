@@ -92,4 +92,4 @@ def test_profile_image_upload(client):
     )
 
     assert response.status_code == status.HTTP_201_CREATED
-    print(response.data)
+    # print(response.data)

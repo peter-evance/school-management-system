@@ -36,13 +36,13 @@ class TeacherViewSet(ModelViewSet):
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
 
-    # def get_permissions(self):
-    #     if self.action in ["create", "destroy", "update", "partial_update"]:
-    #         permission_classes = [IsAdmin]
+    def get_permissions(self):
+        if self.action in ["create", "destroy", "update", "partial_update"]:
+            permission_classes = [IsAdmin]
 
-    #     else:
-    #         permission_classes = [IsAuthenticated]
-    #     return [permission() for permission in permission_classes]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
     @action(detail=False, methods=["GET"])
     def get_assigned_subjects(self, request):
@@ -61,12 +61,13 @@ class TeacherViewSet(ModelViewSet):
 
         return Response(serializer.data, status=200)
 
+    
+    # def update(self, request, *args, **kwargs):
+    #     raise MethodNotAllowed('PUT','Put Request not Allowed!')
+    
     def partial_update(self, request, *args, **kwargs):
+        print(request)
         return super().partial_update(request, *args, **kwargs)
-    
-    def update(self, request, *args, **kwargs):
-        raise MethodNotAllowed('PUT','Put Request not Allowed!')
-    
 
 class StudentViewSet(ModelViewSet):
     queryset = Student.objects.all()
@@ -100,11 +101,11 @@ class StudentViewSet(ModelViewSet):
 
         return Response(serializer.data, status=200)
     
-    def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(request, *args, **kwargs)
-    
-    def update(self, request, *args, **kwargs):
-        raise MethodNotAllowed('PUT','Put Request not Allowed!')
+    # def partial_update(self, request, *args, **kwargs):
+    #     return super().partial_update(request, *args, **kwargs)
+
+    # def update(self, request, *args, **kwargs):
+    #     raise MethodNotAllowed(method='PUT', detail='PUT Request not Allowed!')
     
 
 

@@ -291,47 +291,47 @@ from django.urls import reverse
 #         assert response.status_code == expected_status
 
 
-""" TEST StudentViewSet """
+# """ TEST StudentViewSet """
 
-@pytest.mark.django_db
-class TestStudentViewSet:
-    @pytest.fixture(autouse=True)
-    def setup(self, setup_users, setup_student_profile_data):
-        self.client = setup_users["client"]
-        self.tokens = {
-            "admin": setup_users["admin_token"],
-            "teacher": setup_users["teacher_token"],
-            "student": setup_users["student_token"],
-            "unauthorized": "",
-        }
-        self.classroom = setup_student_profile_data["classroom"]
-        self.enrolled_subjects = setup_student_profile_data["enrolled_subjects"]
+# @pytest.mark.django_db
+# class TestStudentViewSet:
+#     @pytest.fixture(autouse=True)
+#     def setup(self, setup_users, setup_student_profile_data):
+#         self.client = setup_users["client"]
+#         self.tokens = {
+#             "admin": setup_users["admin_token"],
+#             "teacher": setup_users["teacher_token"],
+#             "student": setup_users["student_token"],
+#             "unauthorized": "",
+#         }
+#         self.classroom = setup_student_profile_data["classroom"]
+#         self.enrolled_subjects = setup_student_profile_data["enrolled_subjects"]
 
-    """ UPDATE STUDENTS (PATCH)"""
+#     """ UPDATE STUDENTS (PATCH)"""
 
-    @pytest.mark.parametrize(
-        "user_type, expected_status",
-        [
-            ("admin", status.HTTP_200_OK),
-            ("teacher", status.HTTP_200_OK),
-            ("student", status.HTTP_403_FORBIDDEN),
-            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
-        ],
-    )
-    def test_update_student_profile(self, user_type, expected_status):
-        student = Student.objects.get(id=1)
-        update_data = {
-            "classroom": self.classroom.pk,
-            "enrolled_subjects": [subject.pk for subject in self.enrolled_subjects],
-        }
+#     @pytest.mark.parametrize(
+#         "user_type, expected_status",
+#         [
+#             ("admin", status.HTTP_200_OK),
+#             ("teacher", status.HTTP_200_OK),
+#             ("student", status.HTTP_403_FORBIDDEN),
+#             ("unauthorized", status.HTTP_401_UNAUTHORIZED),
+#         ],
+#     )
+#     def test_update_student_profile(self, user_type, expected_status):
+#         student = Student.objects.get(id=1)
+#         update_data = {
+#             "classroom": self.classroom.pk,
+#             "enrolled_subjects": [subject.pk for subject in self.enrolled_subjects],
+#         }
 
-        response = self.client.patch(
-            reverse("core:students-detail", kwargs={"pk": student.id}),
-            data=update_data,
-            format="json",
-            HTTP_AUTHORIZATION=f"Token {self.tokens[user_type]}",
-        )
-        assert response.status_code == expected_status
+#         response = self.client.patch(
+#             reverse("core:students-detail", kwargs={"pk": student.id}),
+#             data=update_data,
+#             format="json",
+#             HTTP_AUTHORIZATION=f"Token {self.tokens[user_type]}",
+#         )
+#         assert response.status_code == expected_status
 
     # @pytest.mark.parametrize(
     #     "user_type, expected_status",
@@ -401,63 +401,63 @@ class TestStudentViewSet:
 # """ TEST TeachersViewSet """
 
 
-# @pytest.mark.django_db
-# class TestTeacherViewSet:
-#     """
-#     Test suite class for the StudentViewSet API endpoints.
+@pytest.mark.django_db
+class TestTeacherViewSet:
+    """
+    Test suite class for the StudentViewSet API endpoints.
 
-#     This class includes tests for updating student profiles as a teacher.
+    This class includes tests for updating student profiles as a teacher.
 
-#     Attributes:
-#         client (APIClient): An instance of the Django REST Framework APIClient for making API requests.
-#         teachers_token (str): Authentication token for the teacher user.
-#         student_token (str): Authentication token for the student user.
-#         admin_token (str): Authentication token for the admin user.
+    Attributes:
+        client (APIClient): An instance of the Django REST Framework APIClient for making API requests.
+        teachers_token (str): Authentication token for the teacher user.
+        student_token (str): Authentication token for the student user.
+        admin_token (str): Authentication token for the admin user.
 
-#     Note:
-#         This class assumes the existence of the Student model and appropriate API endpoints.
-#         The `setup_users` fixture is used to set up authentication tokens, and a student user
-#         (including the associated Student model) is created during the setup process.
-#     """
+    Note:
+        This class assumes the existence of the Student model and appropriate API endpoints.
+        The `setup_users` fixture is used to set up authentication tokens, and a student user
+        (including the associated Student model) is created during the setup process.
+    """
 
-#     @pytest.fixture(autouse=True)
-#     def setup(self, setup_users, setup_student_profile_data):
-#         self.client = setup_users["client"]
-#         self.tokens = {
-#             "teacher": setup_users["teacher_token"],
-#             "student": setup_users["student_token"],
-#             "admin": setup_users["admin_token"],
-#             "unauthorized": "",
-#         }
-#         self.classroom = setup_student_profile_data["classroom"]
-#         self.assigned_subjects = setup_student_profile_data["enrolled_subjects"]
+    @pytest.fixture(autouse=True)
+    def setup(self, setup_users, setup_student_profile_data):
+        self.client = setup_users["client"]
+        self.tokens = {
+            "teacher": setup_users["teacher_token"],
+            "student": setup_users["student_token"],
+            "admin": setup_users["admin_token"],
+            "unauthorized": "",
+        }
+        self.classroom = setup_student_profile_data["classroom"]
+        self.assigned_subjects = setup_student_profile_data["enrolled_subjects"]
 
-#     """ UPDATE TEACHER (PATCH)"""
+    """ UPDATE TEACHER (PATCH)"""
 
-#     @pytest.mark.parametrize(
-#         "user_type, expected_status",
-#         [
-#             ("admin", status.HTTP_200_OK),
-#             ("teacher", status.HTTP_403_FORBIDDEN),
-#             ("student", status.HTTP_403_FORBIDDEN),
-#             ("unauthorized", status.HTTP_401_UNAUTHORIZED),
-#         ],
-#     )
-#     def test_update_teacher_profile(self, user_type, expected_status):
-#         teacher = Teacher.objects.get(id=1)
-#         update_data = {
-#             "classroom": self.classroom.id,
-#             "assigned_subjects": [subject.id for subject in self.assigned_subjects],
-#         }
+    @pytest.mark.parametrize(
+        "user_type, expected_status",
+        [
+            ("admin", status.HTTP_200_OK),
+            ("teacher", status.HTTP_403_FORBIDDEN),
+            ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
+        ],
+    )
+    def test_update_teacher_profile(self, user_type, expected_status):
+        teacher = Teacher.objects.get(id=1)
+        update_data = {
+            "classroom": self.classroom.id,
+            "assigned_subjects": [subject.id for subject in self.assigned_subjects],
+        }
 
-#         response = self.client.patch(
-#             reverse("core:teachers-detail", kwargs={"pk": teacher.id}),
-#             data=update_data,
-#             format="json",
-#             HTTP_AUTHORIZATION=f"Token {self.tokens[user_type]}",
-#         )
+        response = self.client.patch(
+            reverse("core:teachers-detail", kwargs={"pk": teacher.id}),
+            data=update_data,
+            format="json",
+            HTTP_AUTHORIZATION=f"Token {self.tokens[user_type]}",
+        )
 
-#         assert response.status_code == expected_status
+        assert response.status_code == expected_status
 
 #     """ DELETE TEACHER_PROFILE (DELETE) """
 

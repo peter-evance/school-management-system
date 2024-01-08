@@ -80,17 +80,17 @@ class TeacherViewSet(ModelViewSet):
 class StudentViewSet(ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
-
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = StudentFilter
+    permission_classes = [IsTeacherOrAdmin]
 
-    def get_permissions(self):
-        if self.action in ["create", "destroy", "update", "partial_update"]:
-            permission_classes = [IsTeacherOrAdmin]
+    # def get_permissions(self):
+    #     if self.action in ["create", "destroy", "update", "partial_update"]:
+    #         permission_classes = [IsTeacherOrAdmin]
 
-        else:
-            permission_classes = [IsAuthenticated]
-        return [permission() for permission in permission_classes]
+    #     else:
+    #         permission_classes = [IsAuthenticated]
+    #     return [permission() for permission in permission_classes]
 
     @action(detail=False, methods=["GET"])
     def get_enrolled_subjects(self, request):

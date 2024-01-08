@@ -31,7 +31,7 @@ def setup_users():
     teacher_data = {
         "username": "toughest_teacher",
         "role": CustomUser.RoleChoices.TEACHER,
-        "first_name": "Michael",
+        "first_name": "Michael1",
         "last_name": "Ademic",
         "sex": CustomUser.SexChoices.MALE,
         "date_of_birth": timezone.now().date() - timedelta(weeks=500),
@@ -57,7 +57,7 @@ def setup_users():
     student_data = {
         "username": "toughest_student",
         "role": CustomUser.RoleChoices.STUDENT,
-        "first_name": "Michael",
+        "first_name": "Michael2",
         "last_name": "Ademic",
         "sex": CustomUser.SexChoices.MALE,
         "date_of_birth": timezone.now().date() - timedelta(weeks=50),
@@ -83,7 +83,7 @@ def setup_users():
     admin_data = {
         "username": "toughest_admin",
         "role": CustomUser.RoleChoices.ADMIN,
-        "first_name": "Michael",
+        "first_name": "Michael3",
         "last_name": "Ademic",
         "sex": CustomUser.SexChoices.MALE,
         "date_of_birth": timezone.now().date() - timedelta(weeks=1000),

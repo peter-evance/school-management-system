@@ -11,11 +11,12 @@ from rest_framework.serializers import (
     PrimaryKeyRelatedField,
     ReadOnlyField,
 )
-from users.serializers import CustomUserSerializer2
+from users.serializers import CustomUserSerializer, CustomUserSerializer2
 
 
 class SubjectSerializer(ModelSerializer):
     class_room = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
+
     class Meta:
         model = Subject
         fields = ["id", "title", "code", "class_room", "added_at"]
@@ -29,27 +30,28 @@ class ClassRoomSerializer(ModelSerializer):
 
 
 class TeacherSerializer(ModelSerializer):
-    user = CustomUserSerializer2()
-    # classroom = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
+    user = CustomUserSerializer()
 
     class Meta:
         depth = 1
         model = Teacher
         fields = ["id", "user", "classroom", "created_at", "assigned_subjects"]
 
-    def update(self, instance, validated_data):
-        validated_data.pop('user', None)
-        print(validated_data)
-        print("i am triggered from teacher serializer......................................")
-        return super().update(instance, validated_data)
+
+class TeacherSerializer2(ModelSerializer):
+    user = CustomUserSerializer()
+
+    class Meta:
+        model = Teacher
+        fields = ["id", "user", "classroom", "created_at", "assigned_subjects"]
 
 
 class StudentSerializer(ModelSerializer):
-    user = CustomUserSerializer2()
+    user = CustomUserSerializer()
     # classroom = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
 
     class Meta:
-        depth = True
+        depth = 1
         model = Student
         fields = [
             "id",
@@ -60,10 +62,20 @@ class StudentSerializer(ModelSerializer):
             "registration_number",
         ]
 
-    def update(self, instance, validated_data):
-        validated_data.pop('user', None)
-        return super().update(instance, validated_data)
 
+class StudentSerializer2(ModelSerializer):
+    user = CustomUserSerializer()
+
+    class Meta:
+        model = Student
+        fields = [
+            "id",
+            "user",
+            "classroom",
+            "created_at",
+            "enrolled_subjects",
+            "registration_number",
+        ]
 
 class AdminSerializer(ModelSerializer):
     class Meta:

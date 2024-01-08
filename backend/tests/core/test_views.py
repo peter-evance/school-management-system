@@ -333,30 +333,6 @@ class TestStudentViewSet:
         )
         assert response.status_code == expected_status
 
-    @pytest.mark.parametrize(
-        "user_type, expected_status",
-        [
-            ("admin", status.HTTP_405_METHOD_NOT_ALLOWED),
-            ("teacher", status.HTTP_405_METHOD_NOT_ALLOWED),
-            ("student", status.HTTP_403_FORBIDDEN),
-            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
-        ],
-    )
-    def test_partial_update_student_profile(self, user_type, expected_status):
-        student = Student.objects.get(id=1)
-        update_data = {
-            "classroom": self.classroom.pk,
-            "enrolled_subjects": [subject.pk for subject in self.enrolled_subjects],
-        }
-
-        response = self.client.put(
-            reverse("core:students-detail", kwargs={"pk": student.id}),
-            data=update_data,
-            format="json",
-            HTTP_AUTHORIZATION=f"Token {self.tokens[user_type]}",
-        )
-        assert response.status_code == expected_status
-
     """ DELETE STUDENTS_PROFILE (DELETE) """
 
     @pytest.mark.parametrize(

@@ -293,7 +293,6 @@ class TestClassRoomViewSet:
 
 """ TEST StudentViewSet """
 
-
 @pytest.mark.django_db
 class TestStudentViewSet:
     @pytest.fixture(autouse=True)
@@ -332,7 +331,30 @@ class TestStudentViewSet:
             format="json",
             HTTP_AUTHORIZATION=f"Token {self.tokens[user_type]}",
         )
+        assert response.status_code == expected_status
 
+    @pytest.mark.parametrize(
+        "user_type, expected_status",
+        [
+            ("admin", status.HTTP_405_METHOD_NOT_ALLOWED),
+            ("teacher", status.HTTP_405_METHOD_NOT_ALLOWED),
+            ("student", status.HTTP_403_FORBIDDEN),
+            ("unauthorized", status.HTTP_401_UNAUTHORIZED),
+        ],
+    )
+    def test_partial_update_student_profile(self, user_type, expected_status):
+        student = Student.objects.get(id=1)
+        update_data = {
+            "classroom": self.classroom.pk,
+            "enrolled_subjects": [subject.pk for subject in self.enrolled_subjects],
+        }
+
+        response = self.client.put(
+            reverse("core:students-detail", kwargs={"pk": student.id}),
+            data=update_data,
+            format="json",
+            HTTP_AUTHORIZATION=f"Token {self.tokens[user_type]}",
+        )
         assert response.status_code == expected_status
 
     """ DELETE STUDENTS_PROFILE (DELETE) """
@@ -362,7 +384,7 @@ class TestStudentViewSet:
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_200_OK),
             ("unauthorized", status.HTTP_401_UNAUTHORIZED),
-            # ("student", status.HTTP_403_FORBIDDEN),
+            ("student", status.HTTP_403_FORBIDDEN),
         ],
     )
     def test_filter_students_by_name(self, user_type, expected_status):
@@ -399,7 +421,7 @@ class TestTeacherViewSet:
     """
 
     @pytest.fixture(autouse=True)
-    def setup(self, setup_users, setup_student_profile_data):
+    def setup(self, setup_users, setup_student_profile_data,  setup_classroom_data):
         self.client = setup_users["client"]
         self.tokens = {
             "teacher": setup_users["teacher_token"],
@@ -423,6 +445,8 @@ class TestTeacherViewSet:
     )
     def test_update_teacher_profile(self, user_type, expected_status):
         teacher = Teacher.objects.get(id=1)
+        
+
         update_data = {
             "classroom": self.classroom.id,
             "assigned_subjects": [subject.id for subject in self.assigned_subjects],
@@ -436,6 +460,7 @@ class TestTeacherViewSet:
         )
 
         assert response.status_code == expected_status
+
 
     """ DELETE TEACHER_PROFILE (DELETE) """
 
@@ -656,4 +681,3 @@ class TestSubjectResultViewSet:
             HTTP_AUTHORIZATION=f"Token {self.tokens[user_type]}",
         )
         assert response.status_code == expected_status
-        print(response.data)

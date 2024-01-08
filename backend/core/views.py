@@ -8,6 +8,7 @@ from django_filters import rest_framework as filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import MethodNotAllowed
 
 
 class SubjectViewSet(ModelViewSet):
@@ -33,10 +34,14 @@ class ClassRoomViewSet(ModelViewSet):
 
 class TeacherViewSet(ModelViewSet):
     queryset = Teacher.objects.all()
-    serializer_class = TeacherSerializer
+
+    def get_serializer_class(self):
+        if self.action in ["list", "retrieve"]:
+            return TeacherSerializer
+        return TeacherSerializer2
 
     def get_permissions(self):
-        if self.action in ["create", "destroy", "update", "partial_update"]:
+        if self.action in ["create", "destroy", "partial_update", "update"]:
             permission_classes = [IsAdmin]
 
         else:
@@ -61,20 +66,31 @@ class TeacherViewSet(ModelViewSet):
         return Response(serializer.data, status=200)
 
 
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+    
+    
+    # def update(self, request, *args, **kwargs):
+    #     print("I am triggerd for update")
+    #     raise MethodNotAllowed("PUT", "Put Request not Allowed!")
+
+
+
+
 class StudentViewSet(ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
-
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = StudentFilter
+    permission_classes = [IsTeacherOrAdmin]
 
-    def get_permissions(self):
-        if self.action in ["create", "destroy", "update", "partial_update"]:
-            permission_classes = [IsTeacherOrAdmin]
+    # def get_permissions(self):
+    #     if self.action in ["create", "destroy", "update", "partial_update"]:
+    #         permission_classes = [IsTeacherOrAdmin]
 
-        else:
-            permission_classes = [IsAuthenticated]
-        return [permission() for permission in permission_classes]
+    #     else:
+    #         permission_classes = [IsAuthenticated]
+    #     return [permission() for permission in permission_classes]
 
     @action(detail=False, methods=["GET"])
     def get_enrolled_subjects(self, request):
@@ -92,6 +108,12 @@ class StudentViewSet(ModelViewSet):
         serializer = SubjectSerializer(enrolled_subjects, many=True)
 
         return Response(serializer.data, status=200)
+
+    # def partial_update(self, request, *args, **kwargs):
+    #     return super().partial_update(request, *args, **kwargs)
+
+    # def update(self, request, *args, **kwargs):
+    #     raise MethodNotAllowed(method='PUT', detail='PUT Request not Allowed!')
 
 
 class AdminViewSet(ModelViewSet):

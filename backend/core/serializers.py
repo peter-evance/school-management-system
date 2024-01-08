@@ -11,10 +11,12 @@ from rest_framework.serializers import (
     PrimaryKeyRelatedField,
     ReadOnlyField,
 )
+from users.serializers import CustomUserSerializer, CustomUserSerializer2
 
 
 class SubjectSerializer(ModelSerializer):
-    # class_room = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
+    class_room = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
+
     class Meta:
         model = Subject
         fields = ["id", "title", "code", "class_room", "added_at"]
@@ -28,21 +30,28 @@ class ClassRoomSerializer(ModelSerializer):
 
 
 class TeacherSerializer(ModelSerializer):
-    user = PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
-    classroom = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
+    user = CustomUserSerializer()
 
     class Meta:
-        # depth = True
+        depth = 1
+        model = Teacher
+        fields = ["id", "user", "classroom", "created_at", "assigned_subjects"]
+
+
+class TeacherSerializer2(ModelSerializer):
+    user = CustomUserSerializer()
+
+    class Meta:
         model = Teacher
         fields = ["id", "user", "classroom", "created_at", "assigned_subjects"]
 
 
 class StudentSerializer(ModelSerializer):
-    user = PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
-    classroom = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
+    user = CustomUserSerializer()
+    # classroom = PrimaryKeyRelatedField(queryset=ClassRoom.objects.all())
 
     class Meta:
-        # depth = True
+        depth = 1
         model = Student
         fields = [
             "id",
@@ -53,6 +62,20 @@ class StudentSerializer(ModelSerializer):
             "registration_number",
         ]
 
+
+class StudentSerializer2(ModelSerializer):
+    user = CustomUserSerializer()
+
+    class Meta:
+        model = Student
+        fields = [
+            "id",
+            "user",
+            "classroom",
+            "created_at",
+            "enrolled_subjects",
+            "registration_number",
+        ]
 
 class AdminSerializer(ModelSerializer):
     class Meta:

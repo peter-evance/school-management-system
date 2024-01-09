@@ -159,6 +159,7 @@ INTERNAL_IPS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://school-management-system-ui.vercel.app",
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

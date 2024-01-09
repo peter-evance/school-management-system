@@ -41,4 +41,4 @@ social-auth-core==4.5.0
 sqlparse==0.4.4
 uritemplate==4.1.1
 urllib3==2.1.0
-mysqlclient==2.2.1
+# mysqlclient==2.2.1

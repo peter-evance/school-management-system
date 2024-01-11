@@ -113,25 +113,7 @@ WSGI_APPLICATION = "school_management_system.wsgi.application"
 #     }
 # }
 # DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.mysql",
-#         "NAME": "sql5675810",
-#         "USER": "sql5675810",
-#         "PASSWORD": "DKth7AhCqH",
-#         "HOST": "sql5.freesqldatabase.com",
-#         "PORT": "3306",
-#     }
-# }
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.mysql",
-#         "NAME": "sms",
-#         "USER": "root",
-#         "PASSWORD": "",
-#         "HOST": "localhost",
-#         "PORT": "3306",
-#     }
-# }
+
 # postgrees database
 DATABASES = {
     "default": {

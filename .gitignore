@@ -109,6 +109,7 @@ env.bak/
 venv.bak/
 sms/
 media/
+static/
 
 # Spyder project settings
 .spyderproject

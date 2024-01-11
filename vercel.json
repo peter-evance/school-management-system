@@ -1,14 +1,27 @@
 {
-    "builds": [{
-        "src": "school_management_system/wsgi.py",
-        "use": "@vercel/python",
-        "config": { "maxLambdaSize":"15mb", "runtime":"python3.11" }
-    }],
-
-    "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "school_management_system/wsgi.py"
-        }
-    ]
+  "builds": [
+    {
+      "src": "school_management_system/wsgi.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.11" }
+    },
+    {
+      "src": "build.sh",
+      "use": "now-bash"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "school_management_system/wsgi.py"
+    }
+  ],
+  "env": {
+    "ENVIRONMENT": "production",
+    "DB_NAME": "sql5675810",
+    "DB_USER": "sql5675810",
+    "DB_PASSWORD": "DKth7AhCqH",
+    "DB_HOST": "sql5.freesqldatabase.com",
+    "DB_PORT": "3306"
+  }
 }

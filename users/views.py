@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from users.filters import CustomUserFilter
+from users.filters import CustomUserFilter, ImageFilter
 from rest_framework.viewsets import ModelViewSet
 from users.serializers import (
     CustomUserCreateSerializer,
@@ -26,3 +26,6 @@ class CustomUserViewSet(ModelViewSet):
 class ProfileImageViewSet(ModelViewSet):
     queryset = ProfileImage.objects.all()
     serializer_class = ProfileImageSerializer
+
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = ImageFilter

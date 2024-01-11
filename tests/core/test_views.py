@@ -359,12 +359,12 @@ class TestStudentViewSet:
         [
             ("admin", status.HTTP_200_OK),
             ("teacher", status.HTTP_200_OK),
+            ("student", status.HTTP_200_OK),
             ("unauthorized", status.HTTP_401_UNAUTHORIZED),
-            ("student", status.HTTP_403_FORBIDDEN),
         ],
     )
-    def test_filter_students_by_name(self, user_type, expected_status):
-        filter_query = "?name=lane"
+    def test_filter_students_by_classroom(self, user_type, expected_status):
+        filter_query = "?class_room=1"
         url = f"{reverse('core:students-list')}{filter_query}"
 
         response = self.client.get(

@@ -15,13 +15,5 @@
       "src": "/(.*)",
       "dest": "school_management_system/wsgi.py"
     }
-  ],
-  "env": {
-    "ENVIRONMENT": "production",
-    "DB_NAME": "sql5675810",
-    "DB_USER": "sql5675810",
-    "DB_PASSWORD": "DKth7AhCqH",
-    "DB_HOST": "sql5.freesqldatabase.com",
-    "DB_PORT": "3306"
-  }
+  ]
 }

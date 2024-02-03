@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from users.filters import CustomUserFilter, ImageFilter
 from rest_framework.viewsets import ModelViewSet
 from users.serializers import (
@@ -6,13 +5,15 @@ from users.serializers import (
     CustomUserSerializer,
     ProfileImageSerializer,
 )
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from django_filters import rest_framework as filters
 from users.models import CustomUser, ProfileImage
+from rest_framework.permissions import IsAuthenticated
 
 
-class CustomUserViewSet(ModelViewSet):
+class CustomUserViewSet(ReadOnlyModelViewSet):
     queryset = CustomUser.objects.all()
+    permission_classes = [IsAuthenticated]
 
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = CustomUserFilter

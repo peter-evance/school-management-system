@@ -8,7 +8,7 @@ app_name = "users"
 
 
 router = routers.DefaultRouter()
-router.register(r"users", CustomUserViewSet, basename="users")
+router.register(r"", CustomUserViewSet, basename="users")
 router.register(r"profile-image", ProfileImageViewSet, basename="profile-image")
 
 urlpatterns = [

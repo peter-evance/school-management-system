@@ -1,0 +1,17 @@
+{% load i18n %}
+
+{% block subject %}
+{% blocktrans %}Account activation on The Gem{% endblocktrans %}
+{% endblock subject %}
+
+{% block html_body %}
+<p>You're receiving this email because you need to finish activation process on <a href="https://school-management-system-ui.vercel.app/">The Gem International School</a>.</p>
+
+<p>{% trans "Please go to the following page to activate your account:" %}</p>
+<p><a href="{{ protocol }}://school-management-system-ui.vercel.app/{{ url|safe }}"><b>Click Here to Activate your Account</b></a></p>
+
+<p>{% trans "Thanks for using our site!" %}</p>
+
+<p>{% blocktrans %}The Gem Team{% endblocktrans %}</p>
+
+{% endblock html_body %}

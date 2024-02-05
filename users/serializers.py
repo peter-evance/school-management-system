@@ -1,6 +1,6 @@
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework.serializers import (
-    ModelSerializer
+    ModelSerializer,
 )
 
 from users.models import CustomUser, ProfileImage

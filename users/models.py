@@ -35,8 +35,9 @@ class CustomUser(AbstractUser):
     address = models.TextField(null=True)
     email = models.EmailField(max_length=40, unique=True)
     role = models.CharField(max_length=10, choices=RoleChoices.choices)
+    is_approved = models.BooleanField(default=False)
 
-    REQUIRED_FIELDS = ["first_name", "last_name", "sex", "role", "username", "address"]
+    REQUIRED_FIELDS = ["first_name", "last_name", "sex", "role", "username", "is_approved", "address"]
     USERNAME_FIELD = 'email'
 
     @property

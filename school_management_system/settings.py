@@ -33,7 +33,6 @@ ALLOWED_HOSTS = [
 ]
 # ALLOWED_HOSTS = ["*"]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -84,13 +83,13 @@ DJOSER = {
     "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
     "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
     "SEND_CONFIRMATION_EMAIL": True,
-    "PASSWORD_RESET_CONFIRM_URL": "auth/users/reset_password/{uid}/{token}",
-    "USERNAME_RESET_CONFIRM_URL": "auth/users/reset_email_confirm/{uid}/{token}",
+    "PASSWORD_RESET_CONFIRM_URL": "reset_password/{uid}/{token}",
+    "USERNAME_RESET_CONFIRM_URL": "reset_email_confirm/{uid}/{token}",
     "ACTIVATION_URL": "activation/{uid}/{token}",
     "EMAIL": {
         "activation": "users.email.CustomActivationEmail",
         "confirmation": "users.email.CustomConfirmationEmail",
-        "password_reset": "users.email.PasswordResetEmail",
+        "password_reset": "users.email.CustomPasswordResetEmail",
         "password_changed_confirmation": "users.email.CustomPasswordConfirmationEmail",
         "username_changed_confirmation": "users.email.UsernameChangedConfirmationEmail",
         "username_reset": "users.email.UsernameResetEmail",
@@ -140,11 +139,10 @@ EMAIL_BACKEND = config(
 )
 EMAIL_HOST = config("EMAIL_HOST", default="smtp.gmail.com")
 EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
-EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="upchh@example.com")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="mypassword123")
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="example@gmail.com")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="your_password")
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
 DEFAULT_FROM_EMAIL = "THE GEM TEAM"
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 

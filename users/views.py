@@ -13,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 
 class CustomUserViewSet(ReadOnlyModelViewSet):
     queryset = CustomUser.objects.all()
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = CustomUserFilter

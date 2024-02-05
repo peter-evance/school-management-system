@@ -68,44 +68,44 @@ def test_user_registration(client):
     assert response.status_code == 204
 
 
-# @pytest.mark.django_db
-# def test_profile_image_upload(client):
-#     # Create a user for testin
-#     user_data = {
-#         "username": "ademic",
-#         "first_name": "michael",
-#         "last_name": "ademic",
-#         "sex": CustomUser.SexChoices.MALE,
-#         "role": CustomUser.RoleChoices.STUDENT,
-#         "password": "12345678QQ",
-#         "re_password": "12345678QQ",
-#         "email": "example@gmail.com",
-#         "date_of_birth": timezone.now().date(),
-#     }
-#     response = client.post("/auth/users/", user_data)
-#     assert response.status_code == 201
+@pytest.mark.django_db
+def test_profile_image_upload(client):
+    # Create a user for testin
+    user_data = {
+        "username": "ademic",
+        "first_name": "michael",
+        "last_name": "ademic",
+        "sex": CustomUser.SexChoices.MALE,
+        "role": CustomUser.RoleChoices.STUDENT,
+        "password": "12345678QQ",
+        "re_password": "12345678QQ",
+        "email": "example@gmail.com",
+        "date_of_birth": timezone.now().date(),
+    }
+    response = client.post("/auth/users/", user_data)
+    assert response.status_code == 201
 
-#     user = CustomUser.objects.get(username="ademic")
+    user = CustomUser.objects.get(username="ademic")
 
-#     image_path = os.path.join(BASE_DIR, "fixtures", "example.jpg")
-#     with open(image_path, "rb") as file:
-#         image_content = file.read()
+    image_path = os.path.join(BASE_DIR, "fixtures", "example.jpg")
+    with open(image_path, "rb") as file:
+        image_content = file.read()
 
-#     image_file = SimpleUploadedFile(
-#         "sample_image.jpg", image_content, content_type="image/jpg"
-#     )
+    image_file = SimpleUploadedFile(
+        "sample_image.jpg", image_content, content_type="image/jpg"
+    )
 
-#     # Prepare data for profile image upload
-#     profile_image_data = {
-#         "user": user.id,
-#         "image": image_file,
-#     }
-#     response = client.post(
-#         "/users/profile-image/", profile_image_data, format="multipart"
-#     )
-#     response2 = client.post(
-#         reverse("users:profile-image-list"), profile_image_data, format="multipart"
-#     )
+    # Prepare data for profile image upload
+    profile_image_data = {
+        "user": user.id,
+        "image": image_file,
+    }
+    response = client.post(
+        "/users/profile-image/", profile_image_data, format="multipart"
+    )
+    response2 = client.post(
+        reverse("users:profile-image-list"), profile_image_data, format="multipart"
+    )
 
-#     assert response.status_code == status.HTTP_201_CREATED
-#     print(response.data)
+    assert response.status_code == status.HTTP_201_CREATED
+    print(response.data)

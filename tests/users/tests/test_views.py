@@ -101,10 +101,10 @@ def test_profile_image_upload(client):
         "image": image_file,
     }
     response = client.post(
-        "/users/profile-image/", profile_image_data, format="multipart"
+        reverse("users:profile-images-list"), profile_image_data, format="multipart"
     )
     response2 = client.post(
-        reverse("users:profile-image-list"), profile_image_data, format="multipart"
+        reverse("users:profile-images-list"), profile_image_data, format="multipart"
     )
 
     assert response.status_code == status.HTTP_201_CREATED

@@ -8,8 +8,8 @@ app_name = "users"
 
 
 router = routers.DefaultRouter()
-router.register(r"profile", CustomUserViewSet, basename="users")
-router.register(r"profile-image", ProfileImageViewSet, basename="profile-image")
+router.register(r"profiles", CustomUserViewSet, basename="users")
+router.register(r"profile-images", ProfileImageViewSet, basename="profile-images")
 
 urlpatterns = [
     path("login/", TokenCreateView.as_view(), name="login"),

@@ -74,10 +74,10 @@ def test_profile_image_upload(client, registration_data):
     # Prepare data for profile image upload
     profile_image_data = {"user": user.id, "image": image_file}
     response = client.post(
-        "/users/profile-image/", profile_image_data, format="multipart"
+        "/users/profile-images/", profile_image_data, format="multipart"
     )
     response2 = client.post(
-        reverse("users:profile-image-list"), profile_image_data, format="multipart"
+        "/users/profile-images/", profile_image_data, format="multipart"
     )
 
     assert response.status_code == status.HTTP_201_CREATED
@@ -134,7 +134,7 @@ def test_user_approval(client, registration_data):
     # PATCH request to approve user2
     data = {"user_ids": [user2.id]}
     response = client.patch(
-        "/users/profile/approve_new_users/",
+        "/users/profiles/approve_new_users/",
         data,
         HTTP_AUTHORIZATION=f"Token {token}",
         content_type="application/json",

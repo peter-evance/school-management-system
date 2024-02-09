@@ -1,5 +1,6 @@
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import BasePermission
+from users.models import CustomUser
 
 
 class IsStudent(BasePermission):
@@ -60,6 +61,6 @@ class IsAdmin(BasePermission):
 
     def has_permission(self, request, view):
         # Check if the current user is an admin
-        if request.user.is_authenticated and request.user.is_admin:
+        if request.user.is_authenticated and request.user.role == CustomUser.RoleChoices.ADMIN:
             return True
         raise PermissionDenied(self.message)

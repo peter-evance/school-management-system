@@ -36,6 +36,7 @@ class CustomUserSerializer(UserSerializer):
             "email",
             "role",
             "is_active",
+            "is_approved",
         )
 
 class CustomUserSerializer2(ModelSerializer):

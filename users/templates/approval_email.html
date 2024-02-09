@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Approval Email</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        font-size: 24px;
+        color: #007bff;
+        margin-bottom: 20px;
+      }
+      a{
+        text-decoration: none;
+        color: #007bff;
+      }
+      p {
+        font-size: 16px;
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Congratulations!</h1>
+      <p>Dear {{ recipient_name }},</p>
+      <p>
+        Welcome to our platform! Your account has been successfully approved.
+        Feel free to <a href="https://school-management-system-ui.vercel.app">log in</a> and explore all the features and resources available
+        to you. If you have any questions or need assistance, don't hesitate to
+        reach out to our <a href="https://school-management-system-ui.vercel.app">support team.</a> We're here to help you make the most of
+        your experience. Enjoy!
+      </p>
+      <p>Thank you for using our site!</p>
+      <b>The Gem Team</b>
+    </div>
+  </body>
+</html>

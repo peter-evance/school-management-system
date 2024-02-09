@@ -44,5 +44,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for user in users:
-            CustomUser.objects.create_user(**user)
+            new_user = CustomUser.objects.create_user(**user)
+            new_user.approve_user()
         self.stdout.write(self.style.SUCCESS("Users created successfully"))

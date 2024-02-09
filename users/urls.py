@@ -9,7 +9,7 @@ app_name = "users"
 
 router = routers.DefaultRouter()
 router.register(r"profiles", CustomUserViewSet, basename="users")
-router.register(r"profile-images", ProfileImageViewSet, basename="profile-images")
+router.register(r"profile-images", ProfileImageViewSet, basename="profile-image")
 
 urlpatterns = [
     path("login/", TokenCreateView.as_view(), name="login"),

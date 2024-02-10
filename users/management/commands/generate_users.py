@@ -6,20 +6,20 @@ from users.models import CustomUser
 
 users = [
     {
-        "username": "adewale",
-        "role": CustomUser.RoleChoices.TEACHER,
-        "first_name": "Adewale",
-        "last_name": "Johnson",
+        "username": "peter",
+        "role": CustomUser.RoleChoices.ADMIN,
+        "first_name": "peter",
+        "last_name": "evance",
         "sex": CustomUser.SexChoices.MALE,
         "date_of_birth": timezone.now().date() - timedelta(weeks=50),
         "password": "string@1234",
         "email": "example@gmail.com",
     },
     {
-        "username": "peter",
-        "role": CustomUser.RoleChoices.ADMIN,
-        "first_name": "peter",
-        "last_name": "evance",
+        "username": "adewale",
+        "role": CustomUser.RoleChoices.TEACHER,
+        "first_name": "Adewale",
+        "last_name": "Johnson",
         "sex": CustomUser.SexChoices.MALE,
         "date_of_birth": timezone.now().date() - timedelta(weeks=50),
         "password": "string@1234",
@@ -35,7 +35,6 @@ users = [
         "password": "string@1234",
         "email": "example2@gmail.com",
     },
-
 ]
 
 

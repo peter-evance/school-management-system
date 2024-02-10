@@ -6,7 +6,7 @@ from django.core.files.base import ContentFile
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from users.models import ProfileImage
+from users.models import ProfileImage, CustomUser
 
 
 @receiver(post_save, sender=ProfileImage)
@@ -21,3 +21,9 @@ def generate_thumbnail(sender, instance, created, **kwargs):
             basename(instance.image.name), ContentFile(thumb_io.getvalue())
         )
         instance.save()
+
+@receiver(post_save, sender=CustomUser)
+def inform_admins_on_user_registration(sender, instance, created, **kwargs):
+    if created:
+        instance.notify_admins_on_registration()
+        

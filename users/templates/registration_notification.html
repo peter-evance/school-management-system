@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New User Registration Notification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 24px;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        p {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>New User Registration Notification</h1>
+    <p>Hello Admin,</p>
+    <p>A new user has registered on the platform:</p>
+    <ul>
+        <li><strong>Full Name:</strong> {{ recipient_name }}</li>
+        <li><strong>Email:</strong><a href="mailto:{{ email }}"> {{ email }}</a></li>
+        <li><strong>Role:</strong> {{ user_role }}</li>
+    </ul>    
+    <p>Please take appropriate action to approve or manage the new user's account.</p>
+    <p>Thank you.</p>
+</div>
+</body>
+</html>

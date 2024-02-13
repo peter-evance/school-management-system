@@ -1,13 +1,14 @@
-from users.filters import CustomUserFilter, ImageFilter
+from users.filters import CustomUserFilter, ImageFilter, NotificationFilter
 from rest_framework.viewsets import ModelViewSet
 from users.serializers import (
     CustomUserCreateSerializer,
     CustomUserSerializer,
+    NotificationSerializer,
     ProfileImageSerializer,
 )
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from django_filters import rest_framework as filters
-from users.models import CustomUser, ProfileImage
+from users.models import CustomUser, Notification, ProfileImage
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -97,3 +98,13 @@ class ProfileImageViewSet(ModelViewSet):
 
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ImageFilter
+
+
+class NotificationViewSet(ModelViewSet):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
+
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = NotificationFilter
+
+    permission_classes = [IsAuthenticated]

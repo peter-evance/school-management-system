@@ -3,7 +3,7 @@ from rest_framework.serializers import (
     ModelSerializer,
 )
 
-from users.models import CustomUser, ProfileImage
+from users.models import CustomUser, Notification, ProfileImage
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
@@ -59,3 +59,8 @@ class ProfileImageSerializer(ModelSerializer):
     class Meta:
         model = ProfileImage
         fields = ["user", "image", "thumbnail"]
+
+class NotificationSerializer(ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ["id", "user", "subject", "message", "created_at", "read"]

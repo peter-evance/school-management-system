@@ -30,6 +30,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "school-management-system-alpha.vercel.app",
     "school-management-system-git-main-ademics-projects.vercel.app",
+    "school-management-system-omega.vercel.app"
 ]
 # ALLOWED_HOSTS = ["*"]
 

@@ -30,18 +30,20 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "school-management-system-alpha.vercel.app",
     "school-management-system-git-main-ademics-projects.vercel.app",
-    "school-management-system-omega.vercel.app"
-]
-# ALLOWED_HOSTS = ["*"]
+    "school-management-system-omega.vercel.app",
+] + ["*"]
+
 
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",  # Third party package
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "whitenoise",  # Third party package
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
@@ -56,6 +58,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -119,7 +122,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "school_management_system.wsgi.application"
-
+ASGI_APPLICATION = "school_management_system.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

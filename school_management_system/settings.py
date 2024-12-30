@@ -28,6 +28,8 @@ SECRET_KEY = "django-insecure-vejv_l41#brfz!7%)g7z#d2ri9d7^mdkbwtin0u2g+%+=@s1d^
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
     "school-management-system-alpha.vercel.app",
     "school-management-system-git-main-ademics-projects.vercel.app",
     "school-management-system-omega.vercel.app"
